@@ -614,7 +614,10 @@
         try {
             await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({chat_id: chatId, text: msg}) });
             document.getElementById('order-overlay').style.display = 'none';
-            document.getElementById('success-text').innerHTML = `Заказ принят, <b>${name}</b>!`;
+            
+            // ОБНОВЛЕННЫЙ ТЕКСТ СООБЩЕНИЯ
+            document.getElementById('success-text').innerHTML = `Спасибо, <b>${name}</b>, что выбрали TajKomp!<br><br>Мы свяжемся с вами в ближайшее время.<br>Для быстрого ответа можете позвонить на номер:<br><a href="tel:+992944442044" style="color:var(--primary); font-weight:bold; text-decoration:none;">+992 944 44 20 44</a>`;
+            
             document.getElementById('success-overlay').style.display = 'flex';
             cart = []; updateCartUI();
         } catch(e) { alert("Ошибка подключения!"); }
