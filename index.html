@@ -77,23 +77,40 @@
         }
         .preloader-hidden { opacity: 0; visibility: hidden; }
 
-        /* ШАПКА */
+        /* ШАПКА - ИСПРАВЛЕНО ДЛЯ МОБИЛЬНЫХ */
         header { 
             background: linear-gradient(135deg, var(--primary), var(--primary-hover)); 
-            padding: 25px; 
+            padding: 20px; 
             text-align: center; 
             color: white; 
             box-shadow: 0 4px 30px rgba(0,0,0,0.5); 
             position: relative; 
         }
-        #smart-search { width: 100%; max-width: 600px; padding: 14px 25px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.15); color: white; outline: none; margin-top: 15px; backdrop-filter: blur(10px); transition: var(--transition); }
+        .header-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto 15px auto;
+        }
+        .header-btns-left { display: flex; gap: 10px; }
+
+        .theme-toggle, .admin-trigger { 
+            width: 45px; height: 45px; border-radius: 12px; 
+            background: white; border: 1px solid rgba(0,0,0,0.1); 
+            color: var(--primary); cursor: pointer; transition: var(--transition); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .cart-btn { 
+            background: white; color: var(--primary); padding: 10px 20px; 
+            border-radius: 50px; font-weight: 800; cursor: pointer; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); border: none; transition: var(--transition); 
+        }
+
+        #smart-search { width: 100%; max-width: 600px; padding: 14px 25px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.15); color: white; outline: none; margin-top: 10px; backdrop-filter: blur(10px); transition: var(--transition); }
         #smart-search::placeholder { color: rgba(255,255,255,0.7); }
         #smart-search:focus { background: rgba(255,255,255,0.25); box-shadow: 0 0 20px rgba(255,255,255,0.2); }
-
-        /* КНОПКИ В ШАПКЕ */
-        .theme-toggle { position: absolute; top: 20px; left: 20px; width: 45px; height: 45px; border-radius: 12px; background: white; border: 1px solid rgba(0,0,0,0.1); color: var(--primary); cursor: pointer; z-index: 10; transition: var(--transition); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .admin-trigger { position: absolute; top: 20px; left: 75px; width: 45px; height: 45px; border-radius: 12px; background: white; border: 1px solid rgba(0,0,0,0.1); color: var(--primary); font-size: 20px; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .cart-btn { position: absolute; top: 20px; right: 20px; background: white; color: var(--primary); padding: 10px 20px; border-radius: 50px; font-weight: 800; cursor: pointer; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border: none; transition: var(--transition); }
 
         /* НАВИГАЦИЯ */
         nav { background: var(--card); padding: 12px; position: sticky; top: 0; z-index: 900; border-bottom: 1px solid rgba(0,122,255,0.2); backdrop-filter: blur(15px); }
@@ -115,7 +132,6 @@
         .product-card { background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid rgba(0,122,255,0.1); transition: var(--transition); position: relative; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; }
         .product-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 15px 40px rgba(0,122,255,0.3); }
         
-        /* БЛОК ИЗОБРАЖЕНИЯ */
         .p-img-container { width: 100%; aspect-ratio: 1/1; overflow: hidden; background-color: #000b18; display: flex; align-items: center; justify-content: center; }
         .p-img-container img { width: 100%; height: 100%; object-fit: cover; }
         
@@ -171,9 +187,13 @@
 </div>
 
 <header>
-    <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-sun"></i></button>
-    <button class="admin-trigger" onclick="handleAdmin()"><i class="fas fa-user-shield"></i></button>
-    <div class="cart-btn" onclick="toggleCart()">🛒 <span id="cart-count">0</span></div>
+    <div class="header-top-row">
+        <div class="header-btns-left">
+            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-sun"></i></button>
+            <button class="admin-trigger" onclick="handleAdmin()"><i class="fas fa-user-shield"></i></button>
+        </div>
+        <div class="cart-btn" onclick="toggleCart()">🛒 <span id="cart-count">0</span></div>
+    </div>
 
     <h1 style="letter-spacing: 2px; font-weight: 800;">TajKomp</h1>
     <input type="text" id="smart-search" placeholder="Поиск современной техники..." oninput="render()">
@@ -457,7 +477,6 @@
     function buy(id) { cart.push(products.find(x => x.id == id)); updateCartUI(); }
     function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
     
-    /* ФУНКЦИЯ ОТКРЫТИЯ ОКНА ЗАКАЗА */
     function openOrderForm() { 
         if(cart.length > 0) {
             document.getElementById('order-overlay').style.display = 'flex'; 
