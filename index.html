@@ -211,6 +211,11 @@
         <div class="header-btns-left">
             <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-sun"></i></button>
             <button class="admin-trigger" onclick="handleAdmin()"><i class="fas fa-user-shield"></i></button>
+            <button id="auth-btn-main" class="theme-toggle" onclick="openAuthModal()" style="width: auto; padding: 0 15px; font-size: 0.7rem; font-weight: 800;">ВХОД</button>
+            <div id="user-nav-profile" style="display:none; align-items:center; gap:8px; background:white; padding:5px 12px; border-radius:12px; cursor:pointer;" onclick="alert('Профиль: ' + this.dataset.name)">
+                <img id="nav-user-img" src="" style="width:24px; height:24px; border-radius:50%; object-fit:cover;">
+                <span id="nav-user-name" style="color:var(--primary); font-weight:800; font-size:0.7rem;"></span>
+            </div>
         </div>
         <div class="cart-btn" onclick="toggleCart()">🛒 <span id="cart-count">0</span></div>
     </div>
@@ -338,6 +343,9 @@
     </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+
 <script>
     window.addEventListener('load', () => {
         setTimeout(() => {
@@ -348,13 +356,15 @@
     const firebaseConfig = { databaseURL: "https://tajkomp-7a3fa-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    const fs = firebase.firestore(); // Firestore
+    const auth = firebase.auth();   // Auth
+
     const botToken = '8681756976:AAHIRkRSGduktZCfUeChoABowJ6VH8cwVlg';
     const chatId = '8506743201';
 
     let products = [];
     let categories = ["Ноутбуки", "Сборка ПК", "Принтеры", "Телефон", "Монитор", "Наушник", "Wi-Fi Роутер", "Повербанк", "SSD и HDD", "Аксессуары", "Клавиатура и Мышка", "Моноблоки"];
     
-    // ВЕРНУЛИ СТАРЫЙ СПИСОК КАК НАЧАЛЬНЫЙ
     let subCatsMap = {
         "Сборка ПК": [
             "Блок питания для ПК", 
@@ -370,7 +380,6 @@
     let cart = [], currentCat = "Все", currentSub = "Все", isAdmin = false;
     let currentImgsArray = []; 
 
-    // --- СИНХРОНИЗАЦИЯ КАТЕГОРИЙ С БАЗОЙ ---
     db.ref('settings/categories').on('value', (snap) => {
         if(snap.val()) categories = snap.val();
         updateCategoryMenus();
@@ -381,7 +390,6 @@
         if(snap.val()) {
             subCatsMap = snap.val();
         } else {
-            // Если в базе пусто, записываем туда наш начальный список для "Сборки ПК"
             db.ref('settings/subCatsMap').set(subCatsMap);
         }
         updateCategoryMenus();
@@ -620,7 +628,6 @@
             await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({chat_id: chatId, text: msg}) });
             document.getElementById('order-overlay').style.display = 'none';
             
-            // ОБНОВЛЕННЫЙ ТЕКСТ СООБЩЕНИЯ
             document.getElementById('success-text').innerHTML = `Спасибо, <b>${name}</b>, что выбрали TajKomp!<br><br>Мы свяжемся с вами в ближайшее время.<br>Для быстрого ответа можете позвонить на номер:<br><a href="tel:+992944442044" style="color:var(--primary); font-weight:bold; text-decoration:none;">+992 944 44 20 44</a>`;
             
             document.getElementById('success-overlay').style.display = 'flex';
@@ -657,6 +664,190 @@
         html.setAttribute('data-theme', isD ? 'light' : 'dark');
         document.querySelector('.theme-toggle i').className = isD ? 'fas fa-sun' : 'fas fa-moon';
     }
+    render();
+</script>
+
+<style>
+    .auth-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,11,24,0.95); backdrop-filter: blur(15px); display: none; justify-content: center; align-items: center; z-index: 11000; padding: 20px; }
+    .auth-card-step { background: var(--card); padding: 30px; border-radius: 25px; width: 100%; max-width: 420px; text-align: center; border: 1px solid var(--primary); display: none; }
+    .auth-card-step.active { display: block; }
+    .auth-input-group { margin-bottom: 20px; }
+    .auth-avatar-label { display: block; width: 100px; height: 100px; border-radius: 50%; border: 2px dashed var(--primary); margin: 0 auto 15px; cursor: pointer; position: relative; overflow: hidden; }
+    .auth-avatar-label img { width: 100%; height: 100%; object-fit: cover; }
+</style>
+
+<div id="auth-main-modal" class="auth-modal-overlay">
+    <div id="auth-step-choice" class="auth-card-step active">
+        <h2 style="color:var(--primary); margin-bottom:20px;">Добро пожаловать</h2>
+        <button class="btn-buy" onclick="showAuthStep('auth-step-login')">У меня есть аккаунт (Вход)</button>
+        <button class="btn-buy" style="background:none; border: 1px solid var(--primary); color:var(--primary); margin-top:10px;" onclick="showAuthStep('auth-step-phone')">Создать профиль (Регистрация)</button>
+        <button onclick="closeAuthModal()" style="background:none; border:none; color:var(--text); margin-top:20px; cursor:pointer; opacity:0.5;">Закрыть</button>
+    </div>
+
+    <div id="auth-step-phone" class="auth-card-step">
+        <h2 style="color:var(--primary); margin-bottom:15px;">Регистрация</h2>
+        <p style="font-size:0.8rem; margin-bottom:20px; opacity:0.7;">Введите ваш номер телефона</p>
+        <input type="text" id="auth-reg-phone" class="admin-input" value="+992">
+        <div id="recaptcha-auth-container"></div>
+        <button class="btn-buy" onclick="authSendSms()">Далее</button>
+        <button onclick="showAuthStep('auth-step-choice')" style="background:none; border:none; color:var(--text); margin-top:15px; cursor:pointer; opacity:0.5;">Назад</button>
+    </div>
+
+    <div id="auth-step-sms" class="auth-card-step">
+        <h2 style="color:var(--primary); margin-bottom:15px;">Код верификации</h2>
+        <p style="font-size:0.8rem; margin-bottom:20px; opacity:0.7;">Введите 6 цифр из СМС</p>
+        <input type="text" id="auth-sms-code" class="admin-input" placeholder="000000">
+        <button class="btn-buy" onclick="authVerifySms()">Верифицировать</button>
+    </div>
+
+    <div id="auth-step-profile" class="auth-card-step">
+        <h2 style="color:var(--primary); margin-bottom:15px;">Ваш профиль</h2>
+        <label class="auth-avatar-label" for="auth-avatar-file">
+            <img id="auth-preview-img" src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+        </label>
+        <input type="file" id="auth-avatar-file" style="display:none;" onchange="handleAuthAvatar(this.files)">
+        <input type="text" id="auth-reg-name" class="admin-input" placeholder="Ваше имя">
+        <input type="password" id="auth-reg-pass" class="admin-input" placeholder="Придумайте код (пароль)">
+        <button class="btn-buy" onclick="authSaveProfile()">Завершить регистрацию</button>
+    </div>
+
+    <div id="auth-step-login" class="auth-card-step">
+        <h2 style="color:var(--primary); margin-bottom:15px;">Вход</h2>
+        <input type="text" id="auth-login-phone" class="admin-input" value="+992">
+        <input type="password" id="auth-login-pass" class="admin-input" placeholder="Ваш код (пароль)">
+        <button class="btn-buy" onclick="authHandleLogin()">Войти</button>
+        <button onclick="showAuthStep('auth-step-choice')" style="background:none; border:none; color:var(--text); margin-top:15px; cursor:pointer; opacity:0.5;">Назад</button>
+    </div>
+</div>
+
+<script>
+    let authConfirm;
+    let authAvatarBase64 = "";
+
+    function openAuthModal() { document.getElementById('auth-main-modal').style.display = 'flex'; showAuthStep('auth-step-choice'); }
+    function closeAuthModal() { document.getElementById('auth-main-modal').style.display = 'none'; }
+    function showAuthStep(id) { document.querySelectorAll('.auth-card-step').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+
+    // СМС Регистрация
+    async function authSendSms() {
+        const phone = document.getElementById('auth-reg-phone').value;
+        const verifier = new firebase.auth.RecaptchaVerifier('recaptcha-auth-container', { size: 'invisible' });
+        try {
+            authConfirm = await auth.signInWithPhoneNumber(phone, verifier);
+            showAuthStep('auth-step-sms');
+        } catch (e) { alert("Ошибка СМС: " + e.message); }
+    }
+
+    async function authVerifySms() {
+        const code = document.getElementById('auth-sms-code').value;
+        try {
+            await authConfirm.confirm(code);
+            showAuthStep('auth-step-profile');
+        } catch (e) { alert("Неверный код!"); }
+    }
+
+    function handleAuthAvatar(files) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            authAvatarBase64 = e.target.result;
+            document.getElementById('auth-preview-img').src = authAvatarBase64;
+        };
+        reader.readAsDataURL(files[0]);
+    }
+
+    async function authSaveProfile() {
+        const user = auth.currentUser;
+        const name = document.getElementById('auth-reg-name').value;
+        const pass = document.getElementById('auth-reg-pass').value;
+        if(!name || !pass) return alert("Заполните поля!");
+
+        await fs.collection("users").doc(user.phoneNumber).set({
+            name, pass, phone: user.phoneNumber, avatar: authAvatarBase64, uid: user.uid
+        });
+        localStorage.setItem('tajUser', user.phoneNumber);
+        alert("Регистрация завершена!");
+        location.reload();
+    }
+
+    // Вход
+    async function authHandleLogin() {
+        const phone = document.getElementById('auth-login-phone').value;
+        const pass = document.getElementById('auth-login-pass').value;
+        const doc = await fs.collection("users").doc(phone).get();
+        if(doc.exists && doc.data().pass === pass) {
+            localStorage.setItem('tajUser', phone);
+            alert("С возвращением!");
+            location.reload();
+        } else {
+            alert("Неверный номер или код!");
+        }
+    }
+
+    // Проверка при загрузке
+    window.addEventListener('DOMContentLoaded', async () => {
+        const saved = localStorage.getItem('tajUser');
+        if(saved) {
+            const doc = await fs.collection("users").doc(saved).get();
+            if(doc.exists) {
+                document.getElementById('auth-btn-main').style.display = 'none';
+                const nav = document.getElementById('user-nav-profile');
+                nav.style.display = 'flex';
+                nav.dataset.name = doc.data().name;
+                document.getElementById('nav-user-name').innerText = doc.data().name;
+                document.getElementById('nav-user-img').src = doc.data().avatar || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+            }
+        }
+    });
+</script>
+
+<style>
+    /* Стили для счетчика (+/-) */
+    .qty-control { display: none; align-items: center; justify-content: space-between; background: #f1f3f6; border-radius: 15px; padding: 5px; width: 100%; margin-top: 15px; }
+    [data-theme="dark"] .qty-control { background: var(--input); }
+    .qty-btn { background: none; border: none; color: var(--primary); font-size: 1.5rem; font-weight: 800; cursor: pointer; padding: 0 15px; transition: var(--transition); }
+    .qty-num { font-weight: 800; color: var(--text); font-size: 1rem; }
+</style>
+
+<script>
+    // Логика счетчика товаров
+    const originalRender = render;
+    render = function() {
+        originalRender();
+        document.querySelectorAll('.p-info').forEach(card => {
+            const buyBtn = card.querySelector('.btn-buy');
+            if (buyBtn && !card.querySelector('.qty-control')) {
+                const pId = buyBtn.getAttribute('onclick').match(/\d+/)[0];
+                const qtyHtml = `<div id="qty-box-${pId}" class="qty-control">
+                    <button class="qty-btn" onclick="event.stopPropagation(); changeQtyLocal(${pId}, -1)">−</button>
+                    <span id="qty-val-${pId}" class="qty-num">1</span>
+                    <button class="qty-btn" onclick="event.stopPropagation(); changeQtyLocal(${pId}, 1)">+</button>
+                </div>`;
+                buyBtn.insertAdjacentHTML('afterend', qtyHtml);
+                buyBtn.id = `buy-btn-${pId}`;
+            }
+        });
+    };
+
+    function changeQtyLocal(id, delta) {
+        const numEl = document.getElementById(`qty-val-${id}`);
+        const buyBtn = document.getElementById(`buy-btn-${id}`);
+        const qtyBox = document.getElementById(`qty-box-${id}`);
+        let current = parseInt(numEl.innerText);
+        if (delta > 0) { current++; buy(id); } else {
+            current--;
+            const idx = cart.findIndex(item => item.id == id);
+            if (idx !== -1) { cart.splice(idx, 1); updateCartUI(); }
+        }
+        if (current < 1) { qtyBox.style.display = 'none'; buyBtn.style.display = 'block'; numEl.innerText = '1'; } else { numEl.innerText = current; }
+    }
+
+    const originalBuy = buy;
+    buy = function(id) {
+        const buyBtn = document.getElementById(`buy-btn-${id}`);
+        const qtyBox = document.getElementById(`qty-box-${id}`);
+        if (buyBtn && qtyBox && buyBtn.style.display !== 'none') { buyBtn.style.display = 'none'; qtyBox.style.display = 'flex'; }
+        originalBuy(id);
+    };
     render();
 </script>
 </body>
