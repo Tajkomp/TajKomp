@@ -110,15 +110,14 @@
         }
         .header-btns-left { display: flex; gap: 10px; }
 
-        .theme-toggle, .admin-trigger, .user-auth-trigger { 
+        .theme-toggle, .admin-trigger, .auth-trigger { 
             width: 45px; height: 45px; border-radius: 12px; 
             background: white; border: 1px solid rgba(0,0,0,0.1); 
             color: var(--primary); cursor: pointer; transition: var(--transition); 
             box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
             display: flex; align-items: center; justify-content: center;
         }
-        .user-auth-trigger { width: auto; padding: 0 15px; font-weight: 700; font-size: 0.75rem; gap: 8px; }
-
+        .auth-trigger { width: auto; min-width: 45px; padding: 0 10px; font-weight: 700; font-size: 0.8rem; }
         .cart-btn { 
             background: white; color: var(--primary); padding: 10px 20px; 
             border-radius: 50px; font-weight: 800; cursor: pointer; 
@@ -154,15 +153,6 @@
         
         .promo-badge { position: absolute; top: 12px; left: 12px; background: linear-gradient(45deg, #00F2FF, #007AFF); color: #000; padding: 5px 12px; border-radius: 50px; font-size: 0.65rem; font-weight: 800; z-index: 5; box-shadow: 0 4px 10px rgba(0,242,255,0.4); }
         
-        /* НОВОЕ: СТИЛЬ СЕРДЕЧКА */
-        .fav-btn {
-            position: absolute; top: 12px; right: 12px; width: 35px; height: 35px;
-            background: rgba(255,255,255,0.8); border: none; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 10; transition: var(--transition); color: #8899A6;
-        }
-        .fav-btn.active { color: #ff4444; }
-
         .p-info { padding: 18px; flex-grow: 1; display: flex; flex-direction: column; }
         .p-info h3 { font-size: 0.9rem; height: 2.4em; overflow: hidden; margin-bottom: 10px; line-height: 1.3; font-weight: 700; color: var(--text); }
         .price-new { color: var(--accent); font-weight: 800; font-size: 1.2rem; text-shadow: 0 0 10px rgba(0,212,255,0.2); }
@@ -172,14 +162,6 @@
         .btn-buy { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border: none; border-radius: 15px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: var(--transition); margin-top: auto; }
         .btn-buy:hover { transform: scale(1.03); box-shadow: 0 5px 20px rgba(0,122,255,0.5); }
         .btn-buy:active { transform: scale(0.97); }
-
-        /* НОВОЕ: СТИЛЬ СЧЕТЧИКА - 1 + */
-        .qty-control {
-            display: flex; align-items: center; justify-content: space-between;
-            background: #2ecc71; border-radius: 15px; padding: 5px; margin-top: auto;
-        }
-        .qty-btn { width: 35px; height: 35px; background: rgba(255,255,255,0.2); border: none; border-radius: 10px; color: white; font-weight: 800; cursor: pointer; }
-        .qty-num { color: white; font-weight: 800; font-size: 1rem; }
 
         /* МОДАЛЬНЫЕ ОКНА */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,11,24,0.9); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 5000; padding: 20px; }
@@ -196,30 +178,10 @@
         .admin-input { width: 100%; padding: 14px; background: var(--input); border: 1px solid rgba(0,122,255,0.2); color: var(--text); border-radius: 15px; margin-bottom: 15px; outline: none; transition: var(--transition); }
         .admin-input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,122,255,0.2); }
 
-        /* НОВОЕ: УПРАВЛЕНИЕ КАТЕГОРИЯМИ В АДМИНКЕ */
-        .cat-manager-row {
-            display: flex; align-items: center; justify-content: space-between;
-            background: rgba(0,122,255,0.05); padding: 10px 15px; border-radius: 12px; margin-bottom: 8px;
-        }
-        .cat-move-btns { display: flex; gap: 10px; }
-        .move-arrow { cursor: pointer; opacity: 0.6; transition: 0.2s; }
-        .move-arrow:hover { opacity: 1; color: var(--primary); }
-
         /* ЗАГРУЗКА ФОТО */
         .file-label { display: block; width: 100%; padding: 15px; background: rgba(0,122,255,0.15); border: 2px dashed var(--primary); border-radius: 15px; color: var(--primary); cursor: pointer; font-weight: 700; margin-bottom: 15px; text-align: center; }
         #preview-container { display: none; margin-bottom: 15px; gap: 10px; overflow-x: auto; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 15px; }
         .preview-img { height: 80px; border-radius: 10px; border: 1px solid var(--primary); }
-
-        /* ЛИЧНЫЙ КАБИНЕТ СТИЛИ */
-        .user-avatar-main { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin: 0 auto 15px; display: block; }
-        .order-card { background: rgba(0,122,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 5px solid var(--primary); }
-        .order-date { font-size: 0.7rem; opacity: 0.6; margin-bottom: 5px; }
-
-        /* --- СТИЛИ СПИСКА ПОЛЬЗОВАТЕЛЕЙ (АДМИН) --- */
-        .admin-user-card { display: flex; align-items: center; gap: 15px; background: rgba(0,122,255,0.05); padding: 10px; border-radius: 15px; margin-bottom: 10px; border: 1px solid rgba(0,122,255,0.1); }
-        .admin-user-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
-        .admin-user-info h4 { font-size: 0.9rem; font-weight: 700; }
-        .admin-user-info p { font-size: 0.75rem; opacity: 0.7; }
 
         /* ФУТЕР */
         footer { background: var(--card); padding: 50px 20px; border-top: 1px solid rgba(0,122,255,0.1); margin-top: 60px; text-align: center; }
@@ -235,9 +197,14 @@
         .cat-item span { font-weight: 600; font-size: 0.9rem; }
         .cat-item i { cursor: pointer; color: #ff4444; }
 
-        /* НОВОЕ: ИКОНКА УДАЛЕНИЯ В КОРЗИНЕ */
-        .cart-remove-icon { color: #ff4444; cursor: pointer; font-size: 1.1rem; transition: 0.2s; padding: 5px; }
-        .cart-remove-icon:hover { transform: scale(1.2); }
+        /* СТИЛИ ДЛЯ ВХОДА */
+        .auth-nav { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid rgba(0,122,255,0.1); padding-bottom: 10px; }
+        .auth-nav span { cursor: pointer; padding: 5px 15px; border-radius: 50px; font-weight: 700; opacity: 0.5; transition: 0.3s; }
+        .auth-nav span.active { opacity: 1; background: var(--primary); color: white; }
+
+        /* ИСТОРИЯ ЗАКАЗОВ */
+        .order-history-item { background: rgba(0,122,255,0.03); border: 1px solid rgba(0,122,255,0.1); padding: 15px; border-radius: 15px; margin-bottom: 10px; font-size: 0.85rem; }
+        .order-history-date { font-weight: 800; color: var(--primary); margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -253,10 +220,8 @@
     <div class="header-top-row">
         <div class="header-btns-left">
             <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-sun"></i></button>
+            <button id="auth-btn" class="auth-trigger" onclick="handleAuthClick()"><i class="fas fa-user"></i> Вход</button>
             <button class="admin-trigger" onclick="handleAdmin()"><i class="fas fa-user-shield"></i></button>
-            <button class="user-auth-trigger" id="auth-main-btn" onclick="handleAuthClick()">
-                <i class="fas fa-user-circle"></i> <span id="auth-btn-text">ВХОД / РЕГИСТРАЦИЯ</span>
-            </button>
         </div>
         <div class="cart-btn" onclick="toggleCart()">🛒 <span id="cart-count">0</span></div>
     </div>
@@ -269,97 +234,8 @@
 <div id="pc-sub-nav" class="sub-nav"></div>
 
 <div class="container">
-    <div style="display:flex; gap:10px; margin-bottom:20px;">
-        <button class="nav-link active" id="view-all-btn" onclick="setViewMode('all')">Все товары</button>
-        <button class="nav-link" id="view-fav-btn" onclick="setViewMode('fav')">Избранное </button>
-    </div>
     <div class="products-grid" id="main-grid"></div>
     <p id="loader" style="text-align: center; margin-top: 50px; opacity: 0.5;">Синхронизация с базой данных...</p>
-</div>
-
-<div id="auth-overlay" class="overlay">
-    <div class="modal-content">
-        <span class="close-btn" onclick="document.getElementById('auth-overlay').style.display='none'">&times;</span>
-        <h2 style="color:var(--primary); margin-bottom:25px; font-weight:800; text-align:center;">Личный кабинет</h2>
-        
-        <div id="auth-choice-step">
-            <button class="btn-buy" style="margin-bottom:15px;" onclick="showAuthStep('login')">ВХОД</button>
-            <button class="btn-buy" style="background:var(--accent); color:#000;" onclick="showAuthStep('reg-init')">РЕГИСТРАЦИЯ</button>
-        </div>
-
-        <div id="auth-login-step" style="display:none;">
-            <p style="font-size:0.85rem; margin-bottom:15px; opacity:0.7; text-align:center;">Введите данные для входа:</p>
-            <input type="text" id="login-phone" class="admin-input" placeholder="+992XXXXXXXXX" value="+992">
-            <input type="password" id="login-pass" class="admin-input" placeholder="Пароль">
-            <button class="btn-buy" onclick="loginWithPass()">ВОЙТИ</button>
-            <button style="background:none; border:none; color:var(--primary); font-size:0.75rem; text-decoration:underline; cursor:pointer; width:100%; margin-top:10px;" onclick="forgotPassword()">Забыл пароль?</button>
-            <button onclick="showAuthStep('choice')" style="background:none; border:none; color:var(--primary); width:100%; margin-top:15px; cursor:pointer;">Назад</button>
-        </div>
-
-        <div id="auth-reg-init-step" style="display:none;">
-            <p style="font-size:0.85rem; margin-bottom:15px; opacity:0.7; text-align:center;">Введите номер для регистрации:</p>
-            <input type="text" id="reg-phone-check" class="admin-input" placeholder="+992XXXXXXXXX" value="+992">
-            <button class="btn-buy" onclick="startRegCheck()">ПОЛУЧИТЬ КОД</button>
-            <button onclick="showAuthStep('choice')" style="background:none; border:none; color:var(--primary); width:100%; margin-top:15px; cursor:pointer;">Назад</button>
-        </div>
-
-        <div id="auth-reg-code-step" style="display:none;">
-            <p style="font-size:0.85rem; margin-bottom:15px; color:var(--primary); text-align:center;">Код отправлен в ваш Telegram-бот @TajKomp1bot</p>
-            <input type="number" id="reg-code-verify" class="admin-input" placeholder="Введите код">
-            <button class="btn-buy" onclick="verifyRegCode()">ПОДТВЕРДИТЬ</button>
-        </div>
-
-        <div id="auth-reset-pass-step" style="display:none;">
-            <p style="font-size:0.85rem; margin-bottom:15px; opacity:0.7; text-align:center;">Придумайте новый пароль:</p>
-            <input type="password" id="new-reset-password" class="admin-input" placeholder="Новый пароль">
-            <button class="btn-buy" onclick="saveNewPassword()">СОХРАНИТЬ ПАРОЛЬ</button>
-        </div>
-    </div>
-</div>
-
-<div id="reg-details-overlay" class="overlay">
-    <div class="modal-content">
-        <h2 style="color:var(--primary); margin-bottom:15px; font-weight:800;">Регистрация профиля</h2>
-        <div style="text-align:center; margin-bottom:15px;">
-            <img id="reg-avatar-preview" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="user-avatar-main">
-            <input type="file" id="reg-file" style="display:none;" onchange="handleUserAvatar(this.files)">
-            <label for="reg-file" style="color:var(--primary); cursor:pointer; font-size:0.8rem; font-weight:700;">ЗАГРУЗИТЬ ФОТО</label>
-        </div>
-        <input type="text" id="reg-name" class="admin-input" placeholder="Ваше Имя">
-        <input type="text" id="reg-addr" class="admin-input" placeholder="Ваш Адрес">
-        <input type="password" id="reg-pass" class="admin-input" placeholder="Придумайте пароль">
-        <button class="btn-buy" onclick="saveNewUser()">СОЗДАТЬ АККАУНТ</button>
-    </div>
-</div>
-
-<div id="profile-overlay" class="overlay">
-    <div class="modal-content">
-        <span class="close-btn" onclick="document.getElementById('profile-overlay').style.display='none'">&times;</span>
-        <div id="user-profile-ui">
-            <img id="u-avatar" src="" class="user-avatar-main">
-            <h2 id="u-name" style="text-align:center; color:var(--primary); font-weight:800; margin-bottom:5px;"></h2>
-            <p id="u-phone" style="text-align:center; opacity:0.6; font-size:0.85rem; margin-bottom:20px;"></p>
-            
-            <div style="background:rgba(0,122,255,0.05); padding:15px; border-radius:15px; margin-bottom:25px;">
-                <p style="font-size:0.7rem; opacity:0.6; margin-bottom:5px;">Адрес доставки:</p>
-                <p id="u-addr" style="font-weight:600; font-size:0.9rem;"></p>
-            </div>
-
-            <h3 style="font-size:1rem; font-weight:800; margin-bottom:15px;">Мои заказы:</h3>
-            <div id="user-orders-list" style="max-height:250px; overflow-y:auto; padding-right:5px;"></div>
-
-            <button class="btn-buy" style="background:#8899A6; margin-top:30px;" onclick="logoutUser()">ВЫЙТИ ИЗ АККАУНТА</button>
-            <button class="btn-buy" style="background:#ff4444; margin-top:10px; font-size:0.7rem;" onclick="deleteAccount()">УДАЛИТЬ АККАУНТ НАВСЕГДА</button>
-        </div>
-    </div>
-</div>
-
-<div id="admin-users-overlay" class="overlay">
-    <div class="modal-content">
-        <span class="close-btn" onclick="document.getElementById('admin-users-overlay').style.display='none'">&times;</span>
-        <h2 style="color:var(--primary); margin-bottom:20px; font-weight:800;">Список пользователей</h2>
-        <div id="admin-users-list" style="max-height: 60vh; overflow-y: auto;"></div>
-    </div>
 </div>
 
 <button id="add-p-btn" class="add-p-btn" onclick="openAdminModal()"><i class="fas fa-plus"></i></button>
@@ -377,35 +253,63 @@
     </div>
 </footer>
 
+<div id="auth-overlay" class="overlay">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeAuthModal()">&times;</span>
+        <div class="auth-nav">
+            <span id="tab-login" class="active" onclick="switchAuth('login')">Вход</span>
+            <span id="tab-reg" onclick="switchAuth('reg')">Регистрация</span>
+        </div>
+        <div id="auth-form-body"></div>
+    </div>
+</div>
+
+<div id="profile-overlay" class="overlay">
+    <div class="modal-content" style="max-width: 650px;">
+        <span class="close-btn" onclick="document.getElementById('profile-overlay').style.display='none'">&times;</span>
+        <h2 style="color:var(--primary); margin-bottom:20px; font-weight:800;">Личный кабинет</h2>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:25px;">
+            <div>
+                <p style="font-size:0.7rem; opacity:0.6; margin-bottom:5px;">Имя:</p>
+                <input type="text" id="prof-name" class="admin-input">
+                <p style="font-size:0.7rem; opacity:0.6; margin-bottom:5px;">Адрес:</p>
+                <input type="text" id="prof-addr" class="admin-input">
+                <button class="btn-buy" style="padding:10px; font-size:0.8rem;" onclick="updateProfileData()">Сохранить изменения</button>
+            </div>
+            <div style="border-left: 1px solid rgba(0,122,255,0.1); padding-left:15px;">
+                <p style="font-size:0.7rem; opacity:0.6; margin-bottom:5px;">Смена пароля:</p>
+                <input type="password" id="prof-old-pass" class="admin-input" placeholder="Старый пароль">
+                <input type="password" id="prof-new-pass" class="admin-input" placeholder="Новый пароль">
+                <button class="btn-buy" style="padding:10px; font-size:0.8rem; background:var(--accent); color:#000;" onclick="updatePassword()">Обновить пароль</button>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom:15px; border-top: 1px solid rgba(0,122,255,0.1); padding-top:20px;">История моих заказов</h3>
+        <div id="order-history-container" style="max-height: 300px; overflow-y: auto;">
+            <p style="opacity:0.5; font-size:0.8rem;">Заказов пока нет...</p>
+        </div>
+        
+        <button class="btn-buy" style="margin-top:20px; background:#ff4444;" onclick="logout()">Выйти из аккаунта</button>
+    </div>
+</div>
+
 <div id="admin-overlay" class="overlay">
     <div class="modal-content">
         <span class="close-btn" onclick="closeAdmin()">&times;</span>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <h2 style="color:var(--primary); font-weight:800;">Админ Панель</h2>
-            <button onclick="showAdminUsers()" style="background:none; border:none; font-size:1.5rem; color:var(--primary); cursor:pointer;"><i class="fas fa-users"></i></button>
-        </div>
-        
-        <div style="margin-bottom:20px; background:rgba(0,122,255,0.05); padding:15px; border-radius:15px;">
-            <h4 style="margin-bottom:10px;">Порядок категорий</h4>
-            <div id="admin-cat-order-list"></div>
-        </div>
-
-        <div style="margin-bottom:20px; background:rgba(0,122,255,0.05); padding:15px; border-radius:15px;">
-            <h4 style="margin-bottom:10px;">Смена пароля админа</h4>
-            <input type="password" id="adm-old-pass-check" class="admin-input" placeholder="Старый пароль">
-            <input type="password" id="adm-new-pass-set" class="admin-input" placeholder="Новый пароль">
-            <button class="btn-buy" onclick="updateAdminPass()" style="padding:10px;">Обновить пароль</button>
-        </div>
-
+        <h2 style="color:var(--primary); margin-bottom:15px; font-weight:800;">Товар</h2>
         <button onclick="toggleCatEditor()" style="background:var(--accent); color:#000; border:none; padding:8px 15px; border-radius:10px; font-weight:700; margin-bottom:20px; cursor:pointer; font-size:0.8rem;">⚙️ Управление категориями</button>
         <div id="cat-editor-ui" style="display:none; margin-bottom:20px; padding:15px; background:rgba(0,122,255,0.05); border-radius:15px; border:1px solid var(--primary);">
             <h4 style="margin-bottom:10px;">Редактор каталогов</h4>
+            <p style="font-size: 0.7rem; margin-bottom: 5px; opacity: 0.7;">1. Управление основными:</p>
             <div id="main-cat-list-edit" class="cat-manager-list" style="margin-bottom:15px;"></div>
             <div style="display:flex; gap:5px; margin-bottom:20px;">
                 <input type="text" id="new-main-cat-name" placeholder="Новая категория" class="admin-input" style="margin:0; padding:8px; font-size:0.8rem;">
                 <button onclick="addMainCategory()" style="background:var(--primary); color:#fff; border:none; padding:0 15px; border-radius:10px;">+</button>
             </div>
-            <p style="font-size: 0.7rem; margin-bottom: 5px; opacity: 0.7;">2. Подкатегории для: <select id="edit-sub-for-main" onchange="loadSubCatEditor()" style="background:none; color:var(--primary); border:none; font-weight:800; outline:none;"></select></p>
+            <p style="font-size: 0.7rem; margin-bottom: 5px; opacity: 0.7;">2. Подкатегории для: 
+                <select id="edit-sub-for-main" onchange="loadSubCatEditor()" style="background:none; color:var(--primary); border:none; font-weight:800; outline:none;"></select>
+            </p>
             <div id="sub-cat-list-edit" class="cat-manager-list"></div>
             <div style="display:flex; gap:5px; margin-top:10px;">
                 <input type="text" id="new-sub-cat-name" placeholder="Новая подкатегория" class="admin-input" style="margin:0; padding:8px; font-size:0.8rem;">
@@ -419,7 +323,7 @@
             <input type="number" id="p-price" class="admin-input" placeholder="Цена (смн)">
             <input type="number" id="p-old-price" class="admin-input" placeholder="Старая цена">
         </div>
-        <textarea id="p-desc" class="admin-input" placeholder="Характеристики" rows="4"></textarea>
+        <textarea id="p-desc" class="admin-input" placeholder="Характеристики (через Enter)" rows="4"></textarea>
         <label class="file-label" for="file-input"><i class="fas fa-camera"></i> ВЫБРАТЬ ФОТО (ДО 4 ШТ)</label>
         <input type="file" id="file-input" accept="image/*" multiple style="display:none;" onchange="handleFiles(this.files)">
         <div id="preview-container"></div>
@@ -480,8 +384,9 @@
 
 <script>
     window.addEventListener('load', () => {
-        setTimeout(() => { document.getElementById('preloader').classList.add('preloader-hidden'); }, 4000);
-        checkLocalUser();
+        setTimeout(() => {
+            document.getElementById('preloader').classList.add('preloader-hidden');
+        }, 4000);
     });
 
     const firebaseConfig = { databaseURL: "https://tajkomp-7a3fa-default-rtdb.firebaseio.com/" };
@@ -490,410 +395,346 @@
     const botToken = '8681756976:AAHIRkRSGduktZCfUeChoABowJ6VH8cwVlg';
     const chatId = '8506743201';
 
-    let products = [], categories = ["Ноутбуки", "Сборка ПК", "Принтеры", "Телефон", "Монитор", "Наушник", "Wi-Fi Роутер", "Повербанк", "SSD и HDD", "Аксессуары", "Клавиатура и Мышка", "Моноблоки"];
+    let products = [];
+    let categories = ["Ноутбуки", "Сборка ПК", "Принтеры", "Телефон", "Монитор", "Наушник", "Wi-Fi Роутер", "Повербанк", "SSD и HDD", "Аксессуары", "Клавиатура и Мышка", "Моноблоки"];
     let subCatsMap = { "Сборка ПК": ["Блок питания для ПК", "Видеокарты", "Кулеры для ПК", "Материнские платы", "Оперативная память для ПК", "Процессоры", "Оперативная память для ноутбук"] };
+
     let cart = [], currentCat = "Все", currentSub = "Все", isAdmin = false;
-    let currentImgsArray = [], currentValidCode = null, authTempPhone = "", currentUserData = null, regAvatarBase64 = "";
-    
-    // НОВОЕ: ИЗБРАННОЕ И ПАРОЛЬ АДМИНА
-    let favorites = [], viewMode = 'all';
-    let adminPassCode = "idiev050905";
-    let isResettingPassword = false;
+    let currentUser = null; 
+    let currentImgsArray = []; 
+    let generatedCode = ""; 
 
-    // --- ЛОГИКА ЛИЧНОГО КАБИНЕТА ---
-
-    function checkLocalUser() {
-        const saved = localStorage.getItem('tajkomp_active_user');
-        if (saved) { 
-            currentUserData = JSON.parse(saved); 
-            updateAuthUI();
-            db.ref('favorites/' + currentUserData.phone).on('value', snap => {
-                favorites = snap.val() || [];
-                render();
-            });
-        }
+    // Проверка сессии при загрузке
+    const savedPhone = localStorage.getItem('tajkomp_user');
+    if(savedPhone) {
+        db.ref('users/' + savedPhone).once('value', (s) => {
+            if(s.exists()) loginSuccess(s.val());
+        });
     }
 
-    function handleAuthClick() {
-        if (currentUserData) { openProfileModal(); } 
-        else { showAuthStep('choice'); document.getElementById('auth-overlay').style.display = 'flex'; }
-    }
-
-    function showAuthStep(step) {
-        document.getElementById('auth-choice-step').style.display = (step === 'choice' ? 'block' : 'none');
-        document.getElementById('auth-login-step').style.display = (step === 'login' ? 'block' : 'none');
-        document.getElementById('auth-reg-init-step').style.display = (step === 'reg-init' ? 'block' : 'none');
-        document.getElementById('auth-reg-code-step').style.display = (step === 'reg-code' ? 'block' : 'none');
-        document.getElementById('auth-reset-pass-step').style.display = (step === 'reset-pass' ? 'block' : 'none');
-    }
-
-    async function loginWithPass() {
-        const phone = document.getElementById('login-phone').value.trim();
-        const pass = document.getElementById('login-pass').value;
-        if (phone.length < 9 || !pass) return alert("Введите данные!");
-        const snapshot = await db.ref('users/' + phone).once('value');
-        const user = snapshot.val();
-        if (user && user.password === pass) {
-            currentUserData = user;
-            localStorage.setItem('tajkomp_active_user', JSON.stringify(user));
-            location.reload();
-        } else { alert("Неверный номер или пароль!"); }
-    }
-
-    // НОВОЕ: ПЕРЕКЛЮЧЕНИЕ РЕЖИМА ИЗБРАННОГО
-    function setViewMode(mode) {
-        viewMode = mode;
-        document.getElementById('view-all-btn').classList.toggle('active', mode === 'all');
-        document.getElementById('view-fav-btn').classList.toggle('active', mode === 'fav');
+    db.ref('settings/categories').on('value', (snap) => {
+        if(snap.val()) categories = snap.val();
+        updateCategoryMenus();
         render();
-    }
+    });
 
-    // НОВОЕ: ДОБАВЛЕНИЕ В ИЗБРАННОЕ
-    function toggleFav(id, e) {
-        e.stopPropagation();
-        if (!currentUserData) { handleAuthClick(); return; }
-        const idx = favorites.indexOf(id);
-        if (idx > -1) favorites.splice(idx, 1); else favorites.push(id);
-        db.ref('favorites/' + currentUserData.phone).set(favorites);
-    }
-
-    // НОВОЕ: СЧЕТЧИК ТОВАРА В КАРТОЧКЕ
-    function updateQty(id, delta, e) {
-        if(e) e.stopPropagation();
-        const item = cart.find(c => c.id === id);
-        if (item) {
-            item.qty += delta;
-            if (item.qty <= 0) cart = cart.filter(c => c.id !== id);
-        } else if (delta > 0) {
-            cart.push({ id, qty: 1 });
-        }
-        updateCartUI();
+    db.ref('settings/subCatsMap').on('value', (snap) => {
+        if(snap.val()) { subCatsMap = snap.val(); } 
+        else { db.ref('settings/subCatsMap').set(subCatsMap); }
+        updateCategoryMenus();
         render();
-    }
-
-    // НОВОЕ: ФУНКЦИЯ УДАЛЕНИЯ ТОВАРА ИЗ КОРЗИНЫ
-    function removeFromCart(id) {
-        cart = cart.filter(c => c.id !== id);
-        updateCartUI();
-        render();
-    }
-
-    async function forgotPassword() {
-        const phone = document.getElementById('login-phone').value.trim();
-        if (phone.length < 9) return alert("Введите номер телефона в поле выше!");
-        const snapshot = await db.ref('users/' + phone).once('value');
-        if (!snapshot.val()) return alert("Пользователь не найден!");
-        authTempPhone = phone;
-        isResettingPassword = true;
-        sendCodeAndRedirect();
-    }
-
-    async function sendCodeAndRedirect() {
-        currentValidCode = Math.floor(100000 + Math.random() * 900000);
-        await db.ref('temp_auth_codes/' + authTempPhone).set({ code: currentValidCode, timestamp: Date.now() });
-        window.open('https://t.me/TajKomp1bot', '_blank');
-        showAuthStep('reg-code');
-    }
-
-    async function startRegCheck() {
-        authTempPhone = document.getElementById('reg-phone-check').value.trim();
-        if (authTempPhone.length < 9) return alert("Некорректный номер!");
-        const snapshot = await db.ref('users/' + authTempPhone).once('value');
-        if (snapshot.val()) {
-            alert(`Номер уже зарегистрирован.`);
-            showAuthStep('login');
-            return;
-        }
-        isResettingPassword = false;
-        sendCodeAndRedirect();
-    }
-
-    function verifyRegCode() {
-        const code = document.getElementById('reg-code-verify').value;
-        if (code == currentValidCode) {
-            if (isResettingPassword) showAuthStep('reset-pass');
-            else {
-                document.getElementById('auth-overlay').style.display = 'none';
-                document.getElementById('reg-details-overlay').style.display = 'flex';
-            }
-        } else { alert("Неверный код!"); }
-    }
-
-    async function saveNewPassword() {
-        const newPass = document.getElementById('new-reset-password').value;
-        if (newPass.length < 4) return alert("Слишком короткий пароль!");
-        await db.ref('users/' + authTempPhone + '/password').set(newPass);
-        alert("Пароль обновлен!");
-        location.reload();
-    }
-
-    function handleUserAvatar(files) {
-        const reader = new FileReader();
-        reader.onload = (e) => { regAvatarBase64 = e.target.result; document.getElementById('reg-avatar-preview').src = regAvatarBase64; };
-        reader.readAsDataURL(files[0]);
-    }
-
-    async function saveNewUser() {
-        const name = document.getElementById('reg-name').value, addr = document.getElementById('reg-addr').value, pass = document.getElementById('reg-pass').value;
-        if (!name || !pass) return alert("Заполните поля!");
-        const userData = { phone: authTempPhone, name, address: addr, password: pass, avatar: regAvatarBase64 || "https://cdn-icons-png.flaticon.com/512/149/149071.png", regDate: new Date().toLocaleString() };
-        await db.ref('users/' + authTempPhone).set(userData);
-        currentUserData = userData;
-        localStorage.setItem('tajkomp_active_user', JSON.stringify(userData));
-        location.reload();
-    }
-
-    function updateAuthUI() { if (currentUserData) { document.getElementById('auth-btn-text').innerText = currentUserData.name.toUpperCase(); } }
-
-    async function openProfileModal() {
-        document.getElementById('profile-overlay').style.display = 'flex';
-        document.getElementById('u-avatar').src = currentUserData.avatar;
-        document.getElementById('u-name').innerText = currentUserData.name;
-        document.getElementById('u-phone').innerText = currentUserData.phone;
-        document.getElementById('u-addr').innerText = currentUserData.address || "Не указан";
-        const snapshot = await db.ref('user_orders/' + currentUserData.phone).once('value');
-        const orders = snapshot.val();
-        const list = document.getElementById('user-orders-list');
-        list.innerHTML = orders ? Object.values(orders).reverse().map(o => `
-            <div class="order-card">
-                <div class="order-date">${o.date}</div>
-                <div style="font-size:0.8rem; font-weight:700;">${o.items}</div>
-                <div style="color:var(--primary); font-weight:800; margin-top:5px;">${o.total} смн</div>
-            </div>`).join('') : "<p style='text-align:center;'>Заказов нет</p>";
-    }
-
-    async function deleteAccount() {
-        const confirmPass = prompt("Для удаления введите пароль:");
-        if (confirmPass === currentUserData.password) {
-            if (confirm("Удалить навсегда?")) {
-                await db.ref('users/' + currentUserData.phone).remove();
-                logoutUser();
-            }
-        } else if (confirmPass !== null) alert("Неверно!");
-    }
-
-    function logoutUser() { localStorage.removeItem('tajkomp_active_user'); location.reload(); }
-
-    async function showAdminUsers() {
-        document.getElementById('admin-users-overlay').style.display = 'flex';
-        const snapshot = await db.ref('users').once('value');
-        const users = snapshot.val();
-        const listDiv = document.getElementById('admin-users-list');
-        listDiv.innerHTML = users ? Object.values(users).map(u => `
-            <div class="admin-user-card">
-                <img src="${u.avatar}">
-                <div class="admin-user-info">
-                    <h4>${u.name}</h4>
-                    <p>${u.phone}</p>
-                    <p>${u.address || ''}</p>
-                </div>
-            </div>`).join('') : "Пользователей нет";
-    }
-
-    // --- МАГАЗИН И АДМИНКА ---
-    db.ref('settings/categories').on('value', snap => { if(snap.val()) categories = snap.val(); updateCategoryMenus(); render(); });
-    db.ref('settings/subCatsMap').on('value', snap => { if(snap.val()) subCatsMap = snap.val(); else db.ref('settings/subCatsMap').set(subCatsMap); updateCategoryMenus(); render(); });
-    db.ref('settings/adminPass').on('value', snap => { if(snap.val()) adminPassCode = snap.val(); });
+    });
 
     function updateCategoryMenus() {
         const pCat = document.getElementById('p-cat');
-        let h = "";
+        let optionsHtml = "";
         categories.forEach(c => {
-            const s = subCatsMap[c] || [];
-            if (s.length > 0) { h += `<optgroup label="${c}"><option value="${c}">${c}</option>${s.map(x=>`<option value="${x}">${x}</option>`).join('')}</optgroup>`; }
-            else { h += `<option value="${c}">${c}</option>`; }
+            const subs = subCatsMap[c] || [];
+            if (subs.length > 0) {
+                optionsHtml += `<optgroup label="${c}"><option value="${c}">${c} (Основная)</option>`;
+                subs.forEach(s => optionsHtml += `<option value="${s}">${s}</option>`);
+                optionsHtml += `</optgroup>`;
+            } else { optionsHtml += `<option value="${c}">${c}</option>`; }
         });
-        pCat.innerHTML = h;
-        document.getElementById('main-cat-list-edit').innerHTML = categories.map((c, i) => `<div class="cat-item"><span>${c}</span><i class="fas fa-trash" onclick="deleteMainCategory(${i})"></i></div>`).join('');
-        document.getElementById('edit-sub-for-main').innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join('');
+        if(pCat) pCat.innerHTML = optionsHtml;
+        const mainEdit = document.getElementById('main-cat-list-edit');
+        if(mainEdit) mainEdit.innerHTML = categories.map((c, i) => `<div class="cat-item"><span>${c}</span><div class="cat-actions"><i class="fas fa-trash" onclick="deleteMainCategory(${i})"></i></div></div>`).join('');
+        const selForSub = document.getElementById('edit-sub-for-main');
+        if(selForSub) selForSub.innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join('');
         loadSubCatEditor();
-        renderAdminCatManager();
-    }
-
-    function renderAdminCatManager() {
-        const list = document.getElementById('admin-cat-order-list');
-        list.innerHTML = categories.map((c, i) => `
-            <div class="cat-manager-row">
-                <span>${c}</span>
-                <div class="cat-move-btns">
-                    <i class="fas fa-arrow-up move-arrow" onclick="moveCat(${i}, -1)"></i>
-                    <i class="fas fa-arrow-down move-arrow" onclick="moveCat(${i}, 1)"></i>
-                </div>
-            </div>`).join('');
-    }
-
-    function moveCat(idx, dir) {
-        const newIdx = idx + dir;
-        if (newIdx < 0 || newIdx >= categories.length) return;
-        [categories[idx], categories[newIdx]] = [categories[newIdx], categories[idx]];
-        db.ref('settings/categories').set(categories);
-    }
-
-    function updateAdminPass() {
-        const oldP = document.getElementById('adm-old-pass-check').value;
-        const newP = document.getElementById('adm-new-pass-set').value;
-        if (oldP === adminPassCode) {
-            db.ref('settings/adminPass').set(newP);
-            adminPassCode = newP;
-            alert("Пароль обновлен!");
-        } else alert("Старый пароль неверен!");
     }
 
     function loadSubCatEditor() {
-        const m = document.getElementById('edit-sub-for-main').value;
-        document.getElementById('sub-cat-list-edit').innerHTML = (subCatsMap[m] || []).map((s, i) => `<div class="cat-item"><span>${s}</span><i class="fas fa-trash" onclick="deleteSubCategory('${m}', ${i})"></i></div>`).join('');
+        const sel = document.getElementById('edit-sub-for-main');
+        if(!sel) return;
+        const subs = subCatsMap[sel.value] || [];
+        document.getElementById('sub-cat-list-edit').innerHTML = subs.map((s, i) => `<div class="cat-item"><span>${s}</span><i class="fas fa-trash" onclick="deleteSubCategory('${sel.value}', ${i})"></i></div>`).join('');
     }
 
     function toggleCatEditor() { const el = document.getElementById('cat-editor-ui'); el.style.display = el.style.display === 'none' ? 'block' : 'none'; }
-    function addMainCategory() { const n = document.getElementById('new-main-cat-name').value.trim(); if(n){ categories.push(n); db.ref('settings/categories').set(categories); document.getElementById('new-main-cat-name').value = ""; } }
-    function addSubCategory() { const m = document.getElementById('edit-sub-for-main').value, n = document.getElementById('new-sub-cat-name').value.trim(); if(n&&m){ if(!subCatsMap[m]) subCatsMap[m]=[]; subCatsMap[m].push(n); db.ref('settings/subCatsMap').set(subCatsMap); document.getElementById('new-sub-cat-name').value = ""; } }
-    function deleteMainCategory(i) { if(confirm("Удалить?")){ categories.splice(i, 1); db.ref('settings/categories').set(categories); } }
-    function deleteSubCategory(m, i) { if(confirm("Удалить?")){ subCatsMap[m].splice(i, 1); db.ref('settings/subCatsMap').set(subCatsMap); } }
+    function addMainCategory() { const name = document.getElementById('new-main-cat-name').value.trim(); if(name) { categories.push(name); db.ref('settings/categories').set(categories); document.getElementById('new-main-cat-name').value = ""; } }
+    function addSubCategory() { const main = document.getElementById('edit-sub-for-main').value; const name = document.getElementById('new-sub-cat-name').value.trim(); if(name) { if(!subCatsMap[main]) subCatsMap[main] = []; subCatsMap[main].push(name); db.ref('settings/subCatsMap').set(subCatsMap); document.getElementById('new-sub-cat-name').value = ""; } }
+    function deleteMainCategory(i) { if(confirm("Удалить?")) { categories.splice(i, 1); db.ref('settings/categories').set(categories); } }
+    function deleteSubCategory(m, i) { if(confirm("Удалить?")) { subCatsMap[m].splice(i, 1); db.ref('settings/subCatsMap').set(subCatsMap); } }
 
-    function handleFiles(f) {
-        if (f.length > 4) return alert("Макс 4 фото!");
+    function handleFiles(files) {
+        if (files.length > 4) return alert("Максимум 4 фото!");
         currentImgsArray = [];
-        const p = document.getElementById('preview-container'); p.innerHTML = "";
-        Array.from(f).forEach(file => {
-            const r = new FileReader(); r.onload = (e) => {
-                const img = new Image(); img.onload = () => {
-                    const c = document.createElement('canvas'), MAX = 800;
-                    let w = img.width, h = img.height; if(w > MAX){ h *= MAX/w; w = MAX; }
-                    c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h);
-                    const d = c.toDataURL('image/jpeg', 0.7); currentImgsArray.push(d);
-                    p.innerHTML += `<img src="${d}" class="preview-img">`; p.style.display = 'flex';
-                }; img.src = e.target.result;
-            }; r.readAsDataURL(file);
+        const preview = document.getElementById('preview-container');
+        preview.innerHTML = "";
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX = 800;
+                    let w = img.width, h = img.height;
+                    if (w > MAX) { h *= MAX / w; w = MAX; }
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    const url = canvas.toDataURL('image/jpeg', 0.7);
+                    currentImgsArray.push(url);
+                    preview.innerHTML += `<img src="${url}" class="preview-img">`;
+                    preview.style.display = 'flex';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         });
     }
 
-    db.ref('products').on('value', snap => { products = snap.val() ? Object.values(snap.val()) : []; document.getElementById('loader').style.display='none'; render(); });
-    function handleAdmin() { 
-        if (!isAdmin && prompt("Пароль:") === adminPassCode) { isAdmin = true; document.getElementById('add-p-btn').style.display='flex'; render(); } 
-        else if(isAdmin) openAdminModal();
+    db.ref('products').on('value', (snapshot) => { products = snapshot.val() ? Object.values(snapshot.val()) : []; document.getElementById('loader').style.display = 'none'; render(); });
+
+    function handleAdmin() { if (!isAdmin && prompt("Пароль доступа:") === "idiev050905") { isAdmin = true; document.getElementById('add-p-btn').style.display = 'flex'; render(); } }
+    function openAdminModal() { document.getElementById('admin-overlay').style.display = 'flex'; }
+    function closeAdmin() { document.getElementById('admin-overlay').style.display = 'none'; resetAdminForm(); }
+
+    // --- АВТОРИЗАЦИЯ И ПРОФИЛЬ ---
+    function handleAuthClick() {
+        if(currentUser) {
+            document.getElementById('prof-name').value = currentUser.name;
+            document.getElementById('prof-addr').value = currentUser.address;
+            loadOrderHistory();
+            document.getElementById('profile-overlay').style.display = 'flex';
+        } else { openAuthModal(); }
     }
-    function openAdminModal() { document.getElementById('admin-overlay').style.display='flex'; }
-    function closeAdmin() { document.getElementById('admin-overlay').style.display='none'; resetAdminForm(); }
+
+    function openAuthModal() { document.getElementById('auth-overlay').style.display = 'flex'; switchAuth('login'); }
+    function closeAuthModal() { document.getElementById('auth-overlay').style.display = 'none'; }
+
+    function switchAuth(type) {
+        const body = document.getElementById('auth-form-body');
+        document.getElementById('tab-login').classList.toggle('active', type === 'login');
+        document.getElementById('tab-reg').classList.toggle('active', type === 'reg');
+        if(type === 'login') {
+            body.innerHTML = `
+                <input type="text" id="l-phone" class="admin-input" placeholder="Номер телефона">
+                <input type="password" id="l-pass" class="admin-input" placeholder="Пароль">
+                <p onclick="forgotPassword()" style="font-size:0.75rem; color:var(--primary); cursor:pointer; margin-bottom:15px; text-align:right;">Забыли пароль?</p>
+                <button class="btn-buy" onclick="login()">Войти</button>
+            `;
+        } else {
+            body.innerHTML = `
+                <input type="text" id="r-phone" class="admin-input" placeholder="Номер телефона">
+                <button id="r-send-btn" class="btn-buy" onclick="sendAuthCode('reg')">Получить код в Telegram</button>
+                <div id="r-code-box" style="display:none; margin-top:10px;">
+                    <input type="text" id="r-code" class="admin-input" placeholder="Код из бота">
+                    <button class="btn-buy" onclick="verifyRegCode()">Подтвердить</button>
+                </div>
+                <div id="r-final-box" style="display:none; margin-top:10px;">
+                    <input type="text" id="r-name" class="admin-input" placeholder="Ваше имя">
+                    <input type="text" id="r-addr" class="admin-input" placeholder="Адрес доставки">
+                    <input type="password" id="r-pass" class="admin-input" placeholder="Придумайте пароль">
+                    <button class="btn-buy" onclick="finishReg()">Зарегистрироваться</button>
+                </div>
+            `;
+        }
+    }
+
+    async function sendAuthCode(mode) {
+        const ph = mode === 'reg' ? document.getElementById('r-phone').value : document.getElementById('l-phone').value;
+        if(!ph) return alert("Введите номер!");
+        if(mode === 'reg') {
+            const snap = await db.ref('users/' + ph).once('value');
+            if(snap.exists()) return alert("Этот номер уже зарегистрирован!");
+        }
+        generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
+        const msg = `🔐 КОД TAJKOMP\n\nКод: ${generatedCode}\nДля: ${ph}`;
+        try {
+            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({chat_id: chatId, text: msg}) });
+            if(mode === 'reg') document.getElementById('r-code-box').style.display = 'block';
+            else { 
+                const code = prompt("Введите код из Telegram:");
+                if(code === generatedCode) {
+                    const newPass = prompt("Придумайте новый пароль:");
+                    if(newPass) {
+                        db.ref('users/' + ph).update({password: newPass});
+                        alert("Пароль обновлен!");
+                    }
+                } else { alert("Неверный код!"); }
+            }
+            alert("Код отправлен!");
+        } catch(e) { alert("Ошибка!"); }
+    }
+
+    function verifyRegCode() {
+        if(document.getElementById('r-code').value === generatedCode) {
+            document.getElementById('r-code-box').style.display = 'none';
+            document.getElementById('r-final-box').style.display = 'block';
+        } else { alert("Неверный код!"); }
+    }
+
+    function finishReg() {
+        const ph = document.getElementById('r-phone').value;
+        const name = document.getElementById('r-name').value;
+        const addr = document.getElementById('r-addr').value;
+        const pass = document.getElementById('r-pass').value;
+        if(!name || !addr || !pass) return alert("Заполните всё!");
+        const userData = { phone: ph, name: name, address: addr, password: pass };
+        db.ref('users/' + ph).set(userData).then(() => {
+            alert("Успешно!");
+            loginSuccess(userData);
+            closeAuthModal();
+        });
+    }
+
+    async function login() {
+        const ph = document.getElementById('l-phone').value;
+        const ps = document.getElementById('l-pass').value;
+        const snap = await db.ref('users/' + ph).once('value');
+        if(snap.exists() && snap.val().password === ps) {
+            loginSuccess(snap.val());
+            closeAuthModal();
+        } else { alert("Неверные данные!"); }
+    }
+
+    function loginSuccess(user) {
+        currentUser = user;
+        localStorage.setItem('tajkomp_user', user.phone);
+        document.getElementById('auth-btn').innerHTML = `<i class="fas fa-user-check"></i> ${user.name}`;
+        // Автозаполнение полей оформления заказа
+        document.getElementById('o-name').value = user.name;
+        document.getElementById('o-phone').value = user.phone;
+        document.getElementById('o-addr').value = user.address;
+    }
+
+    function logout() {
+        localStorage.removeItem('tajkomp_user');
+        location.reload();
+    }
+
+    function forgotPassword() { sendAuthCode('forgot'); }
+
+    function updateProfileData() {
+        const n = document.getElementById('prof-name').value;
+        const a = document.getElementById('prof-addr').value;
+        db.ref('users/' + currentUser.phone).update({ name: n, address: a }).then(() => {
+            currentUser.name = n; currentUser.address = a;
+            loginSuccess(currentUser);
+            alert("Данные обновлены!");
+        });
+    }
+
+    function updatePassword() {
+        const op = document.getElementById('prof-old-pass').value;
+        const np = document.getElementById('prof-new-pass').value;
+        if(op === currentUser.password && np) {
+            db.ref('users/' + currentUser.phone).update({ password: np }).then(() => {
+                currentUser.password = np;
+                alert("Пароль изменен!");
+            });
+        } else { alert("Неверный старый пароль!"); }
+    }
+
+    function loadOrderHistory() {
+        const container = document.getElementById('order-history-container');
+        db.ref('orders/' + currentUser.phone).on('value', (snap) => {
+            const data = snap.val();
+            if(!data) { container.innerHTML = '<p style="opacity:0.5;">Заказов пока нет</p>'; return; }
+            const list = Object.values(data).reverse();
+            container.innerHTML = list.map(o => `
+                <div class="order-history-item">
+                    <div class="order-history-date">${o.date}</div>
+                    <div style="margin-bottom:5px;">${o.items_list}</div>
+                    <div style="font-weight:700;">Итого: ${o.total} смн</div>
+                </div>
+            `).join('');
+        });
+    }
+
     function saveProduct() {
         const id = document.getElementById('edit-id').value || Date.now();
-        const data = { id, name: document.getElementById('p-name').value, price: document.getElementById('p-price').value, oldPrice: document.getElementById('p-old-price').value, cat: document.getElementById('p-cat').value, desc: document.getElementById('p-desc').value, imgs: currentImgsArray };
-        db.ref('products/' + id).set(data).then(() => closeAdmin());
+        if(currentImgsArray.length === 0) return alert("Фото!");
+        const pData = { id, name: document.getElementById('p-name').value, price: document.getElementById('p-price').value, oldPrice: document.getElementById('p-old-price').value, cat: document.getElementById('p-cat').value, desc: document.getElementById('p-desc').value, imgs: currentImgsArray };
+        db.ref('products/' + id).set(pData).then(() => closeAdmin());
     }
 
     function render() {
-        const grid = document.getElementById('main-grid'), s = document.getElementById('smart-search').value.toLowerCase();
+        const grid = document.getElementById('main-grid');
+        const s = document.getElementById('smart-search').value.toLowerCase();
         document.getElementById('category-list').innerHTML = `<div class="nav-link ${currentCat==='Все'?'active':''}" onclick="setCat('Все', this)">Все</div>` + categories.map(c => `<div class="nav-link ${currentCat===c?'active':''}" onclick="setCat('${c}', this)">${c}</div>`).join('');
-        
         const filtered = products.filter(p => {
-            let m = currentCat === "Все"; if(!m){ if(p.cat===currentCat) m=true; const subs = subCatsMap[currentCat]||[]; if(subs.includes(p.cat)) m=(currentSub==="Все"||p.cat===currentSub); }
-            const favMatch = viewMode === 'all' || favorites.includes(p.id);
-            return m && favMatch && (p.name.toLowerCase().includes(s) || (p.desc && p.desc.toLowerCase().includes(s)));
+            let m = currentCat === "Все" || p.cat === currentCat || (subCatsMap[currentCat] && subCatsMap[currentCat].includes(p.cat));
+            return m && (p.name.toLowerCase().includes(s) || (p.desc && p.desc.toLowerCase().includes(s)));
         });
-
-        grid.innerHTML = filtered.map(p => {
-            const itemInCart = cart.find(c => c.id === p.id);
-            const isFav = favorites.includes(p.id);
-            return `
+        grid.innerHTML = filtered.map(p => `
             <div class="product-card" onclick="openP(${p.id})">
-                <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(${p.id}, event)">
-                    <i class="fas fa-heart"></i>
-                </button>
                 <div class="admin-controls" style="display:${isAdmin?'flex':'none'}">
                     <button class="admin-btn-card" onclick="editP(${p.id}, event)" style="background:#2ecc71"><i class="fas fa-edit"></i></button>
                     <button class="admin-btn-card" onclick="deleteP(${p.id}, event)" style="background:#e74c3c"><i class="fas fa-trash"></i></button>
                 </div>
                 ${p.oldPrice ? '<div class="promo-badge">АКЦИЯ</div>' : ''}
-                <div class="p-img-container"><img src="${p.imgs?.[0] || ''}" loading="lazy"></div>
+                <div class="p-img-container"><img src="${p.imgs[0]}" loading="lazy"></div>
                 <div class="p-info">
                     <h3>${p.name}</h3>
-                    <div class="price-box"><span class="price-new">${p.price} с.</span></div>
-                    ${itemInCart ? `
-                        <div class="qty-control" onclick="event.stopPropagation()">
-                            <button class="qty-btn" onclick="updateQty(${p.id}, -1, event)">-</button>
-                            <span class="qty-num">${itemInCart.qty}</span>
-                            <button class="qty-btn" onclick="updateQty(${p.id}, 1, event)">+</button>
-                        </div>
-                    ` : `
-                        <button class="btn-buy" style="margin-top:15px; padding:10px; font-size:0.8rem;" onclick="event.stopPropagation(); updateQty(${p.id}, 1, event)">В корзину</button>
-                    `}
+                    <div class="price-box"><span class="price-new">${p.price} с.</span>${p.oldPrice ? `<span class="price-old">${p.oldPrice} с.</span>` : ''}</div>
+                    <button class="btn-buy" style="margin-top:15px; padding:10px; font-size:0.8rem;" onclick="event.stopPropagation(); buy(${p.id})">В корзину</button>
                 </div>
-            </div>`;
-        }).join('');
+            </div>`).join('');
     }
 
     function editP(id, e) {
-        e.stopPropagation(); const p = products.find(x => x.id == id); document.getElementById('edit-id').value = p.id; document.getElementById('p-name').value = p.name; document.getElementById('p-price').value = p.price; document.getElementById('p-old-price').value = p.oldPrice || ""; document.getElementById('p-cat').value = p.cat; document.getElementById('p-desc').value = p.desc;
-        currentImgsArray = p.imgs || []; document.getElementById('preview-container').innerHTML = currentImgsArray.map(img => `<img src="${img}" class="preview-img">`).join(''); document.getElementById('preview-container').style.display='flex'; openAdminModal();
+        e.stopPropagation(); const p = products.find(x => x.id == id);
+        document.getElementById('edit-id').value = p.id; document.getElementById('p-name').value = p.name; document.getElementById('p-price').value = p.price; document.getElementById('p-old-price').value = p.oldPrice; document.getElementById('p-cat').value = p.cat; document.getElementById('p-desc').value = p.desc;
+        currentImgsArray = p.imgs; document.getElementById('preview-container').innerHTML = currentImgsArray.map(i => `<img src="${i}" class="preview-img">`).join('');
+        document.getElementById('preview-container').style.display = 'flex'; openAdminModal();
     }
 
-    function setCat(cat, el) { currentCat = cat; currentSub = "Все"; const pc = document.getElementById('pc-sub-nav'), s = subCatsMap[cat] || []; if(s.length){ pc.style.display='flex'; pc.innerHTML = `<div class="sub-link active" onclick="setSub('Все', this)">Все ${cat}</div>` + s.map(x=>`<div class="sub-link" onclick="setSub('${x}', this)">${x}</div>`).join(''); } else { pc.style.display='none'; } render(); }
-    function setSub(sub, el) { currentSub = sub; document.querySelectorAll('.sub-link').forEach(l=>l.classList.remove('active')); el.classList.add('active'); render(); }
-    function openP(id) { const p = products.find(x => x.id == id); document.getElementById('m-gallery').innerHTML = (p.imgs || []).map(s => `<img src="${s}" style="height:250px; border-radius:15px; border: 1px solid rgba(0,122,255,0.1);">`).join(''); document.getElementById('m-title').innerText = p.name; document.getElementById('m-price').innerText = p.price + " смн"; document.getElementById('m-old-price').innerText = p.oldPrice ? p.oldPrice + " смн" : ""; document.getElementById('m-desc').innerText = p.desc || "Характеристики..."; document.getElementById('m-buy-btn').onclick = () => { updateQty(p.id, 1, event); document.getElementById('product-overlay').style.display='none'; }; document.getElementById('product-overlay').style.display='flex'; }
-    
-    function setCatMode(mode) {
-        viewMode = mode;
-        document.getElementById('view-all-btn').classList.toggle('active', mode === 'all');
-        document.getElementById('view-fav-btn').classList.toggle('active', mode === 'fav');
+    function setCat(c, el) {
+        currentCat = c; currentSub = "Все";
+        const subs = subCatsMap[c] || [];
+        const ps = document.getElementById('pc-sub-nav');
+        if(subs.length) { ps.style.display = 'flex'; ps.innerHTML = `<div class="sub-link active" onclick="setSub('Все', this)">Все ${c}</div>` + subs.map(s => `<div class="sub-link" onclick="setSub('${s}', this)">${s}</div>`).join(''); }
+        else { ps.style.display = 'none'; }
         render();
     }
 
-    function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
+    function setSub(s, el) { currentSub = s; document.querySelectorAll('.sub-link').forEach(l => l.classList.remove('active')); el.classList.add('active'); render(); }
     
-    // НОВОЕ: ОТКРЫТИЕ ФОРМЫ С АВТОЗАПОЛНЕНИЕМ
-    function openOrderForm() { 
-        if (!currentUserData) { handleAuthClick(); return; } 
-        if(cart.length) {
-            document.getElementById('o-name').value = currentUserData.name;
-            document.getElementById('o-phone').value = currentUserData.phone;
-            document.getElementById('o-addr').value = currentUserData.address || "";
-            document.getElementById('order-overlay').style.display='flex'; 
-        }
+    function openP(id) {
+        const p = products.find(x => x.id == id);
+        document.getElementById('m-gallery').innerHTML = p.imgs.map(i => `<img src="${i}" style="height:250px; border-radius:15px; border: 1px solid rgba(0,122,255,0.1);">`).join('');
+        document.getElementById('m-title').innerText = p.name; document.getElementById('m-price').innerText = p.price + " смн"; document.getElementById('m-old-price').innerText = p.oldPrice ? p.oldPrice + " смн" : ""; document.getElementById('m-desc').innerText = p.desc;
+        document.getElementById('m-buy-btn').onclick = () => { buy(p.id); document.getElementById('product-overlay').style.display='none'; };
+        document.getElementById('product-overlay').style.display = 'flex';
     }
 
-    // НОВОЕ: ОТПРАВКА ЗАКАЗА И ОКНО УСПЕХА
-    async function sendOrder() {
-        const name = document.getElementById('o-name').value, phone = document.getElementById('o-phone').value, addr = document.getElementById('o-addr').value, del = document.getElementById('o-del').value;
-        if(!name||!phone) return alert("Введите данные!");
-        let total = document.getElementById('cart-total').innerText;
-        
-        const itemsMsg = cart.map(c => {
-            const p = products.find(x => x.id == c.id);
-            return p ? `• ${p.name} (x${c.qty})` : "";
-        }).join('\n');
+    function buy(id) { cart.push(products.find(x => x.id == id)); updateCartUI(); }
+    function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
+    function openOrderForm() { if(cart.length) document.getElementById('order-overlay').style.display = 'flex'; else alert("Пусто!"); }
 
-        let msg = `🔵 ЗАКАЗ TajKomp\n👤 Имя: ${name}\n📞 Тел: ${phone}\n🚚 Тип: ${del}${del==='Доставка'?'\n📍 Адрес: '+addr:''}\n\n🛒 Товары:\n${itemsMsg}\n💰 Итого: ${total} смн`;
-        
+    async function sendOrder() {
+        const n = document.getElementById('o-name').value, ph = document.getElementById('o-phone').value, dt = document.getElementById('o-del').value, ad = document.getElementById('o-addr').value;
+        if(!n || !ph) return alert("Данные!");
+        const total = document.getElementById('cart-total').innerText;
+        const list = cart.map((i, idx) => `${idx+1}. ${i.name} (${i.price} смн)`).join('\n');
+        const now = new Date().toLocaleString();
+        const msg = `🔵 ЗАКАЗ\n👤 Клиент: ${n}\n📞 Тел: ${ph}\n🚚: ${dt}\n📍: ${ad}\n🛒:\n${list}\n💰: ${total} смн`;
+
         try {
             await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({chat_id: chatId, text: msg}) });
-            document.getElementById('order-overlay').style.display='none';
-            document.getElementById('success-text').innerHTML = `Заказ принят!<br>Спасибо, <b>${name}</b>, что выбрали TajKomp.<br>Мы свяжемся с вами в ближайшее время.<br>Для быстрого ответа звоните: <b>+992 978 11 78 11</b>`;
-            document.getElementById('success-overlay').style.display='flex';
+            // Сохраняем в историю если залогинен
+            if(currentUser) {
+                db.ref('orders/' + currentUser.phone).push({ date: now, items_list: list, total: total });
+            }
+            document.getElementById('order-overlay').style.display = 'none';
+            document.getElementById('success-text').innerHTML = `Спасибо, <b>${n}</b>!<br>Свяжемся скоро.`;
+            document.getElementById('success-overlay').style.display = 'flex';
             cart = []; updateCartUI();
         } catch(e) { alert("Ошибка!"); }
     }
 
     function updateCartUI() {
-        document.getElementById('cart-count').innerText = cart.reduce((a,b)=>a+b.qty, 0);
+        document.getElementById('cart-count').innerText = cart.length;
         let t = 0;
-        document.getElementById('cart-items').innerHTML = cart.map((item) => {
-            const p = products.find(x => x.id === item.id);
-            if(p) { 
-                t += Number(p.price) * item.qty; 
-                return `<div style="display:flex; justify-content:space-between; margin-bottom:15px; background:rgba(0,122,255,0.05); padding:10px; border-radius:10px;">
-                    <div style="flex:1;">
-                        <div style="font-size:0.85rem; font-weight:700;">${p.name}</div>
-                        <div style="font-size:0.8rem; color:var(--primary); font-weight:800;">${p.price} x ${item.qty} с.</div>
-                    </div>
-                    <i class="fas fa-trash-alt cart-remove-icon" onclick="removeFromCart(${p.id})"></i>
-                </div>`; 
-            }
-        }).join('');
+        document.getElementById('cart-items').innerHTML = cart.map((i, idx) => { t += Number(i.price); return `<div style="display:flex; justify-content:space-between; margin-bottom:15px; background:rgba(0,122,255,0.05); padding:15px; border-radius:15px;"><div style="font-size:0.8rem; font-weight:600; flex:1;">${i.name}</div><div style="font-weight:800; color:var(--primary);">${i.price} с.</div><i class="fas fa-trash-alt" style="color:#ff4444; cursor:pointer; margin-left:15px;" onclick="cart.splice(${idx},1); updateCartUI();"></i></div>`; }).join('');
         document.getElementById('cart-total').innerText = t;
     }
 
     function deleteP(id, e) { e.stopPropagation(); if(confirm("Удалить?")) db.ref('products/' + id).remove(); }
-    function resetAdminForm() { document.getElementById('edit-id').value = ""; document.getElementById('preview-container').innerHTML = ""; }
-    function toggleTheme() { const h = document.documentElement, d = h.getAttribute('data-theme') === 'dark'; h.setAttribute('data-theme', d ? 'light' : 'dark'); }
+    function resetAdminForm() { document.getElementById('edit-id').value = ""; currentImgsArray = []; document.getElementById('preview-container').innerHTML = ""; }
+    function toggleTheme() { const h = document.documentElement; const isD = h.getAttribute('data-theme') === 'dark'; h.setAttribute('data-theme', isD ? 'light' : 'dark'); document.querySelector('.theme-toggle i').className = isD ? 'fas fa-sun' : 'fas fa-moon'; }
     render();
 </script>
 </body>
