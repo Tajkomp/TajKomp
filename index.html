@@ -103,7 +103,7 @@
         /* --- ОБНОВЛЕННАЯ ШАПКА В ОДИН РЯД --- */
         header { 
             background: linear-gradient(135deg, var(--primary), var(--primary-hover)); 
-            padding: 10px 20px; 
+            padding: 12px 15px; 
             color: white; 
             box-shadow: 0 4px 30px rgba(0,0,0,0.5); 
             position: sticky; top: 0; z-index: 1000;
@@ -114,16 +114,16 @@
             align-items: center;
             max-width: 1400px;
             margin: 0 auto;
-            gap: 15px;
+            gap: 10px;
         }
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .header-logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; cursor: pointer; }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .header-logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; cursor: pointer; white-space: nowrap; }
         
         .catalog-btn {
             background: rgba(255,255,255,0.2);
             border: 1px solid rgba(255,255,255,0.3);
             color: white;
-            padding: 10px 18px;
+            padding: 10px 14px;
             border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
@@ -138,24 +138,25 @@
         #smart-search { 
             flex: 1; 
             max-width: 600px; 
-            padding: 12px 20px; 
+            padding: 12px 18px; 
             border-radius: 12px; 
-            border: none; 
+            border: 1px solid rgba(255,255,255,0.2); 
             background: rgba(255,255,255,0.15); 
             color: white; 
             outline: none; 
             backdrop-filter: blur(10px); 
             transition: var(--transition); 
+            font-size: 0.95rem;
         }
         #smart-search::placeholder { color: rgba(255,255,255,0.7); }
-        #smart-search:focus { background: rgba(255,255,255,0.25); }
+        #smart-search:focus { background: rgba(255,255,255,0.25); border-color: white; }
 
-        .header-right { display: flex; align-items: center; gap: 10px; }
+        .header-right { display: flex; align-items: center; gap: 8px; }
 
         /* --- СТИЛЬНЫЕ КНОПКИ ТЕМЫ И АДМИНА --- */
-        .theme-toggle, .admin-trigger, .fav-btn-header { 
-            width: 42px; 
-            height: 42px; 
+        .theme-toggle, .admin-trigger, .fav-btn-header, .cart-trigger-btn { 
+            width: 40px; 
+            height: 40px; 
             border-radius: 12px; 
             background: rgba(255, 255, 255, 0.15); 
             border: 1px solid rgba(255, 255, 255, 0.2); 
@@ -165,16 +166,51 @@
             display: flex; 
             align-items: center; 
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 1rem;
             backdrop-filter: blur(5px);
+            position: relative;
         }
-        .theme-toggle:hover, .admin-trigger:hover, .fav-btn-header:hover { 
+        .theme-toggle:hover, .admin-trigger:hover, .fav-btn-header:hover, .cart-trigger-btn:hover { 
             background: white; 
             color: var(--primary); 
             transform: translateY(-2px); 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         .fav-btn-header.active { background: #ff4757; color: white; border-color: #ff4757; }
+
+        /* --- МОБИЛЬНАЯ АДАПТАЦИЯ ШАПКИ --- */
+        @media (max-width: 800px) {
+            header { padding: 10px; }
+            .header-main-row { flex-wrap: wrap; gap: 8px; }
+            .header-left { flex: 1; }
+            .header-logo { font-size: 1.3rem; }
+            
+            /* Поиск на новую строку */
+            #smart-search { 
+                order: 10; 
+                max-width: 100%; 
+                width: 100%; 
+                margin-top: 5px; 
+                height: 45px;
+            }
+            
+            .catalog-btn span, .auth-btn span { display: none; }
+            .catalog-btn { padding: 10px; width: 40px; justify-content: center; }
+            
+            .auth-btn { 
+                padding: 0; 
+                width: 40px; 
+                height: 40px; 
+                justify-content: center; 
+                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.15);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: white;
+            }
+            .auth-btn:hover { background: white; color: var(--primary); }
+            
+            .header-right { gap: 5px; }
+            .theme-toggle, .admin-trigger, .fav-btn-header, .cart-trigger-btn { width: 38px; height: 38px; }
+        }
 
         /* --- БОКОВОЕ МЕНЮ КАТАЛОГОВ (SIDEBAR) --- */
         #catalog-sidebar {
@@ -367,20 +403,68 @@
         
         .user-list-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(0,122,255,0.05); border-radius: 15px; margin-bottom: 10px; }
         .user-avatar-list { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
-        .auth-btn { background: white; color: var(--primary); padding: 8px 15px; border-radius: 50px; font-weight: 700; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); transition: var(--transition); font-size: 0.8rem; display: flex; align-items: center; gap: 8px; }
+        .auth-btn { background: white; color: var(--primary); padding: 8px 15px; border-radius: 12px; font-weight: 700; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); transition: var(--transition); font-size: 0.8rem; display: flex; align-items: center; gap: 8px; }
         .auth-btn:hover { background: var(--accent); color: #000; transform: translateY(-2px); }
         .user-avatar-mini { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid var(--primary); }
         .phone-prefix-container { position: relative; display: flex; align-items: center; margin-bottom: 15px; }
         .phone-prefix { position: absolute; left: 15px; font-weight: 700; color: var(--primary); pointer-events: none; z-index: 5; }
         .phone-input { padding-left: 60px !important; }
 
-        @media (max-width: 800px) {
-            .header-main-row { flex-wrap: wrap; }
-            #smart-search { order: 3; max-width: 100%; width: 100%; margin-top: 10px; }
-            .header-logo { font-size: 1.2rem; }
-            .catalog-btn span { display: none; }
-            .auth-btn span { display: none; }
+        /* Счетчик товаров в корзине в шапке */
+        #cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 800;
+            border: 2px solid var(--primary);
         }
+
+        /* Дополнительные стили для истории заказов */
+        .order-history-item {
+            background: rgba(0,122,255,0.05);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+        }
+        .order-history-date { font-size: 0.8rem; opacity: 0.6; margin-bottom: 5px; }
+        .order-history-sum { font-weight: 800; color: var(--primary); }
+
+        /* --- СТИЛИ ДЛЯ ОНЛАЙН-КОНСУЛЬТАНТА --- */
+        #chat-trigger { position: fixed; bottom: 110px; right: 25px; width: 60px; height: 60px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; box-shadow: 0 5px 20px rgba(0,122,255,0.4); z-index: 3900; transition: var(--transition); border: none; }
+        #chat-trigger:hover { transform: scale(1.1); background: var(--accent); color: #000; }
+        
+        #chat-window { position: fixed; bottom: 100px; right: 25px; width: 320px; height: 450px; background: var(--card); border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 4000; display: none; flex-direction: column; overflow: hidden; border: 1px solid rgba(0,122,255,0.2); }
+        .chat-header { background: var(--primary); color: white; padding: 15px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; }
+        .msg { padding: 10px 14px; border-radius: 15px; max-width: 85%; line-height: 1.4; }
+        .msg-bot { background: rgba(0,122,255,0.1); align-self: flex-start; border-bottom-left-radius: 2px; }
+        .msg-user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .chat-input-area { padding: 10px; display: flex; gap: 5px; border-top: 1px solid rgba(0,0,0,0.05); }
+        .chat-input-area input { flex: 1; border: 1px solid var(--input); padding: 10px; border-radius: 10px; outline: none; background: var(--input); color: var(--text); }
+        .chat-btn-send { background: var(--primary); color: white; border: none; width: 40px; border-radius: 10px; cursor: pointer; }
+        .chat-options { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+        .chat-opt-btn { background: white; border: 1px solid var(--primary); color: var(--primary); padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; cursor: pointer; transition: 0.2s; }
+        .chat-opt-btn:hover { background: var(--primary); color: white; }
+
+        /* --- СТИЛИ ДЛЯ УСТАНОВКИ PWA --- */
+        #pwa-install-banner { position: fixed; bottom: 25px; right: 25px; width: 260px; background: var(--card); border-radius: 18px; padding: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 5500; display: none; border: 1px solid var(--primary); animation: slideIn 0.5s ease; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .pwa-close { position: absolute; top: 10px; right: 10px; cursor: pointer; opacity: 0.5; font-size: 0.8rem; }
+        .pwa-flex { display: flex; align-items: center; gap: 12px; }
+        .pwa-logo { width: 45px; height: 45px; border-radius: 10px; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 0.8rem; }
+        .pwa-text h4 { font-size: 0.9rem; margin-bottom: 2px; }
+        .pwa-text p { font-size: 0.75rem; opacity: 0.7; margin-bottom: 8px; }
+        .pwa-install-btn { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; width: 100%; }
+        
+        #ios-guide { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 6000; display: none; justify-content: center; align-items: center; }
+        .ios-guide-box { background: white; width: 85%; border-radius: 20px; padding: 25px; text-align: center; color: #000; }
+        .ios-icon { font-size: 2rem; color: #007AFF; margin: 15px 0; }
     </style>
 </head>
 <body>
@@ -408,7 +492,7 @@
             </button>
         </div>
 
-        <input type="text" id="smart-search" placeholder="Поиск современной техники..." oninput="render()">
+        <input type="text" id="smart-search" placeholder="Поиск техники..." oninput="render()">
 
         <div class="header-right">
             <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-sun"></i></button>
@@ -419,9 +503,10 @@
             <button class="fav-btn-header" id="fav-filter-btn" onclick="toggleFavFilter()">
                 <i class="fas fa-heart"></i>
             </button>
-            <div class="cart-btn" onclick="toggleCart()" style="padding: 10px 15px; border-radius: 12px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
-            </div>
+            <button class="cart-trigger-btn" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
+            </button>
         </div>
     </div>
 </header>
@@ -508,6 +593,29 @@
         <h2 style="color:var(--primary); margin-bottom:20px;">Вход</h2>
         <input type="password" id="login-password-input" class="admin-input" placeholder="Введите пароль">
         <button class="btn-buy" onclick="attemptLogin()">Войти</button>
+    </div>
+</div>
+
+<div id="edit-profile-overlay" class="overlay">
+    <div class="modal-content">
+        <span class="close-btn" onclick="document.getElementById('edit-profile-overlay').style.display='none'">&times;</span>
+        <h2 style="color:var(--primary); margin-bottom:20px;">Изменить данные</h2>
+        <input type="text" id="edit-user-name" class="admin-input" placeholder="Ваше имя">
+        <input type="password" id="edit-user-pass" class="admin-input" placeholder="Новый пароль">
+        <label class="file-label" for="edit-user-avatar"><i class="fas fa-camera"></i> Сменить фото</label>
+        <input type="file" id="edit-user-avatar" accept="image/*" style="display:none;" onchange="previewEditAvatar(this.files)">
+        <div id="edit-avatar-preview" style="text-align:center; margin-bottom:15px;">
+            <img id="edit-avatar-img" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border: 2px solid var(--primary);">
+        </div>
+        <button class="btn-buy" onclick="saveProfileChanges()">Сохранить изменения</button>
+    </div>
+</div>
+
+<div id="order-history-overlay" class="overlay">
+    <div class="modal-content">
+        <span class="close-btn" onclick="document.getElementById('order-history-overlay').style.display='none'">&times;</span>
+        <h2 style="color:var(--primary); margin-bottom:20px;">Мои заказы</h2>
+        <div id="order-history-list" style="max-height: 60vh; overflow-y: auto;"></div>
     </div>
 </div>
 
@@ -636,6 +744,10 @@
         <div id="o-addr-box" style="display:none;">
             <input type="text" id="o-addr" class="admin-input" placeholder="Укажите точный адрес доставки">
         </div>
+        <select id="o-pay" class="admin-input">
+            <option value="Наличными">Наличными при получении</option>
+            <option value="Алиф (Рассрочка)">Алиф (Рассрочка)</option>
+        </select>
         <button class="btn-buy" onclick="sendOrder()">Заказать в Telegram</button>
     </div>
 </div>
@@ -659,10 +771,55 @@
     </div>
 </div>
 
+<button id="chat-trigger" onclick="toggleChat()"><i class="fas fa-comments"></i></button>
+<div id="chat-window">
+    <div class="chat-header">
+        <span>Консультант TajKomp</span>
+        <i class="fas fa-times" onclick="toggleChat()" style="cursor:pointer"></i>
+    </div>
+    <div id="chat-messages" class="chat-messages">
+        <div class="msg msg-bot">Здравствуйте! Я ваш помощник. У вас есть вопрос?</div>
+        <div class="chat-options">
+            <button class="chat-opt-btn" onclick="botAnswer('Как заказать?')">Как заказать?</button>
+            <button class="chat-opt-btn" onclick="botAnswer('Оплата')">Оплата</button>
+            <button class="chat-opt-btn" onclick="botAnswer('Где вы находитесь?')">Где вы?</button>
+        </div>
+    </div>
+    <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Напишите вопрос...">
+        <button class="chat-btn-send" onclick="sendToTG()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<div id="pwa-install-banner">
+    <span class="pwa-close" onclick="this.parentElement.style.display='none'">&times;</span>
+    <div class="pwa-flex">
+        <div class="pwa-logo">TK</div>
+        <div class="pwa-text">
+            <h4>Установить TajKomp</h4>
+            <p>Быстрый доступ к покупкам</p>
+        </div>
+    </div>
+    <button class="pwa-install-btn" id="pwa-btn">Установить</button>
+</div>
+
+<div id="ios-guide" onclick="this.style.display='none'">
+    <div class="ios-guide-box">
+        <h3>Установка на iPhone</h3>
+        <p>Чтобы установить приложение:</p>
+        <div class="ios-icon"><i class="fas fa-external-link-alt"></i></div>
+        <p>1. Нажмите на кнопку <b>«Поделиться»</b> в браузере Safari.</p>
+        <div class="ios-icon"><i class="far fa-plus-square"></i></div>
+        <p>2. Выберите <b>«На экран «Домой»</b>.</p>
+        <button class="btn-buy" style="margin-top:20px;">Понятно</button>
+    </div>
+</div>
+
 <script>
     window.addEventListener('load', () => {
         setTimeout(() => {
             document.getElementById('preloader').classList.add('preloader-hidden');
+            checkPWA(); // Проверка установки после загрузки
         }, 4000);
     });
 
@@ -695,6 +852,7 @@
     let currentUser = JSON.parse(localStorage.getItem('tajkomp_user')) || null;
     let loginAttempts = 0;
     let regAvatarBase64 = "";
+    let editAvatarBase64 = ""; // Для редактирования
     let authMode = "login"; 
 
     let adminPass = "idiev050905";
@@ -1088,11 +1246,14 @@
     function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
     
     function openOrderForm() { 
+        if(!currentUser) {
+            alert("Пожалуйста, войдите в личный кабинет для оформления заказа.");
+            openAuth();
+            return;
+        }
         if(cart.length > 0) { 
-            if(currentUser) {
-                document.getElementById('o-name').value = currentUser.name;
-                document.getElementById('o-phone').value = currentUser.phone;
-            }
+            document.getElementById('o-name').value = currentUser.name;
+            document.getElementById('o-phone').value = currentUser.phone;
             document.getElementById('order-overlay').style.display = 'flex'; 
         } 
         else { alert("Корзина пуста!"); }
@@ -1103,25 +1264,30 @@
         const phone = document.getElementById('o-phone').value;
         const delType = document.getElementById('o-del').value;
         const address = document.getElementById('o-addr').value;
+        const payType = document.getElementById('o-pay').value;
 
         if(!name || !phone) return alert("Введите данные!");
         if(delType === 'Доставка' && !address) return alert("Укажите адрес доставки!");
         
         let list = cart.map((i, idx) => `${idx+1}. ${i.name} [x${i.qty}] (${i.price * i.qty} смн)`).join('\n');
-        let msg = `🔵 ТАДЖКОМП - ЗАКАЗ\n👤 Клиент: ${name}\n📞 Тел: ${phone}\n🚚 Тип: ${delType}\n`;
+        let msg = `🔵 ТАДЖКОМП - ЗАКАЗ\n👤 Клиент: ${name}\n📞 Тел: ${phone}\n🚚 Тип: ${delType}\n💰 Оплата: ${payType}\n`;
         if(delType === 'Доставка') msg += `📍 Адрес: ${address}\n`;
         msg += `🛒 Товары:\n${list}\n💰 ИТОГО: ${document.getElementById('cart-total').innerText} смн`;
 
         try {
             await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({chat_id: chatId, text: msg}) });
             
-            if(currentUser) {
-                const orderData = { date: new Date().toLocaleString(), total: document.getElementById('cart-total').innerText, items: list };
-                db.ref('orders/' + currentUser.phone.replace('+', '')).push(orderData);
-            }
+            // Сохраняем в историю
+            const orderData = { 
+                date: new Date().toLocaleString(), 
+                total: document.getElementById('cart-total').innerText, 
+                items: list,
+                payType: payType 
+            };
+            db.ref('orders/' + currentUser.phone.replace('+', '')).push(orderData);
 
             document.getElementById('order-overlay').style.display = 'none';
-            document.getElementById('success-text').innerHTML = `Спасибо, <b>${name}</b>, что выбрали TajKomp!<br><br>Мы свяжемся с вами в ближайшее время.<br>Для быстрого ответа можете позвонить на номер:<br><a href="tel:+992944442044" style="color:var(--primary); font-weight:bold; text-decoration:none;">+992 944 44 20 44</a>`;
+            document.getElementById('success-text').innerHTML = `Спасибо, <b>${name}</b>, что выбрали TajKomp!<br><br>Мы свяжемся с вами в ближайшее время.`;
             document.getElementById('success-overlay').style.display = 'flex';
             cart = []; updateCartUI();
             render();
@@ -1163,11 +1329,7 @@
     }
 
     function openAuth() {
-        if(currentUser) {
-            showProfile();
-        } else {
-            document.getElementById('auth-choice-overlay').style.display = 'flex';
-        }
+        if(currentUser) { showProfile(); } else { document.getElementById('auth-choice-overlay').style.display = 'flex'; }
     }
 
     function openLoginPhone() {
@@ -1190,27 +1352,20 @@
         
         db.ref('users/' + phone).once('value', snap => {
             const exists = snap.exists();
-            
             if(authMode === "reg" && exists) {
-                alert("Этот номер уже зарегистрирован! Пожалуйста, войдите.");
+                alert("Этот номер уже зарегистрирован!");
                 openLoginPhone();
                 return;
             }
-            
             if(authMode === "login" && !exists) {
-                alert("Пользователь не найден. Пожалуйста, зарегистрируйтесь.");
+                alert("Пользователь не найден.");
                 openRegPhone();
                 return;
             }
-
             window.tempPhone = phone;
             document.getElementById('auth-overlay').style.display = 'none';
-
-            if(authMode === "reg") {
-                document.getElementById('reg-details-overlay').style.display = 'flex';
-            } else {
-                document.getElementById('login-pass-overlay').style.display = 'flex';
-            }
+            if(authMode === "reg") document.getElementById('reg-details-overlay').style.display = 'flex';
+            else document.getElementById('login-pass-overlay').style.display = 'flex';
         });
     }
 
@@ -1247,6 +1402,7 @@
             currentUser = userData;
             localStorage.setItem('tajkomp_user', JSON.stringify(userData));
             updateAuthBtn();
+            checkPWA(); // Показать установку новому пользователю
         });
     }
 
@@ -1261,44 +1417,31 @@
                 localStorage.setItem('tajkomp_user', JSON.stringify(user));
                 updateAuthBtn();
                 loginAttempts = 0;
+                checkPWA(); // Проверка PWA после логина
             } else {
                 loginAttempts++;
                 if(loginAttempts >= 3) {
                     if(confirm("Ошибка пароля 3 раза. Сбросить через Telegram?")) {
-                        const link = `https://t.me/IDIEVW?text=Я забыл пароль. Имя: ${user.name}, Номер: ${user.phone}`;
-                        window.open(link, '_blank');
+                        window.open(`https://t.me/IDIEVW?text=Я забыл пароль. Номер: ${user.phone}`, '_blank');
                     }
-                } else {
-                    alert("Неправильный пароль!");
-                }
+                } else alert("Неправильный пароль!");
             }
         });
     }
 
     function playWelcomeAnim(name, isReturn) {
         const overlay = document.getElementById('welcome-anim');
-        const title = document.getElementById('welcome-title');
-        const sub = document.getElementById('welcome-sub');
-        
-        title.innerText = isReturn ? "С возвращением" : "Добро пожаловать";
-        sub.innerText = name + (isReturn ? "." : "! Спасибо за выбор TajKomp");
-        
+        document.getElementById('welcome-title').innerText = isReturn ? "С возвращением" : "Добро пожаловать";
+        document.getElementById('welcome-sub').innerText = name;
         overlay.style.display = 'flex';
         setTimeout(() => { overlay.style.opacity = '1'; overlay.style.visibility = 'visible'; }, 50);
-        
-        setTimeout(() => {
-            overlay.style.opacity = '0';
-            setTimeout(() => { overlay.style.display = 'none'; }, 800);
-        }, 3000);
+        setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => { overlay.style.display = 'none'; }, 800); }, 3000);
     }
 
     function updateAuthBtn() {
         const btn = document.getElementById('main-auth-trigger');
-        if(currentUser) {
-            btn.innerHTML = `<img src="${currentUser.avatar || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="user-avatar-mini"> ${currentUser.name.split(' ')[0]}`;
-        } else {
-            btn.innerHTML = `<i class="fas fa-user-circle"></i> <span>Войти</span>`;
-        }
+        if(currentUser) btn.innerHTML = `<img src="${currentUser.avatar || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="user-avatar-mini"> ${currentUser.name.split(' ')[0]}`;
+        else btn.innerHTML = `<i class="fas fa-user-circle"></i> <span>Войти</span>`;
     }
 
     function showProfile() {
@@ -1309,46 +1452,62 @@
     }
 
     function openProfileEdit() {
-        const newName = prompt("Введите новое имя:", currentUser.name);
-        if(!newName) return;
-        const oldPass = prompt("Введите текущий пароль для подтверждения:");
-        if(oldPass !== currentUser.pass) return alert("Неверный пароль!");
-        const newPass = prompt("Введите новый пароль (или оставьте старый):", currentUser.pass);
-        
-        const updates = { name: newName, pass: newPass };
+        document.getElementById('edit-user-name').value = currentUser.name;
+        document.getElementById('edit-user-pass').value = currentUser.pass;
+        document.getElementById('edit-avatar-img').src = currentUser.avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        editAvatarBase64 = currentUser.avatar || "";
+        document.getElementById('edit-profile-overlay').style.display = 'flex';
+    }
+
+    function previewEditAvatar(files) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            editAvatarBase64 = e.target.result;
+            document.getElementById('edit-avatar-img').src = editAvatarBase64;
+        };
+        reader.readAsDataURL(files[0]);
+    }
+
+    function saveProfileChanges() {
+        const newName = document.getElementById('edit-user-name').value;
+        const newPass = document.getElementById('edit-user-pass').value;
+        if(!newName || !newPass) return alert("Заполните поля!");
+
+        const updates = { name: newName, pass: newPass, avatar: editAvatarBase64 };
         db.ref('users/' + currentUser.phone.replace('+', '')).update(updates).then(() => {
             currentUser.name = newName;
             currentUser.pass = newPass;
+            currentUser.avatar = editAvatarBase64;
             localStorage.setItem('tajkomp_user', JSON.stringify(currentUser));
-            alert("Данные обновлены!");
+            alert("Данные успешно обновлены!");
             location.reload();
         });
     }
 
     function showOrderHistory() {
         db.ref('orders/' + currentUser.phone.replace('+', '')).once('value', snap => {
-            if(!snap.exists()) return alert("История заказов пуста.");
-            let history = "ВАША ИСТОРИЯ ЗАКАЗОВ:\n";
-            snap.forEach(child => {
-                const o = child.val();
-                history += `\n📅 ${o.date}\n💰 Сумма: ${o.total} смн\n-------------------`;
-            });
-            alert(history);
+            const list = document.getElementById('order-history-list');
+            list.innerHTML = "";
+            if(!snap.exists()) {
+                list.innerHTML = "<p style='text-align:center; opacity:0.5;'>У вас пока нет заказов.</p>";
+            } else {
+                snap.forEach(child => {
+                    const o = child.val();
+                    list.innerHTML += `
+                        <div class="order-history-item">
+                            <div class="order-history-date">${o.date}</div>
+                            <div style="font-size:0.85rem; margin-bottom:10px;">${o.items.replace(/\n/g, '<br>')}</div>
+                            <div class="order-history-sum">Сумма: ${o.total} смн</div>
+                            <div style="font-size:0.75rem; opacity:0.7;">Оплата: ${o.payType || 'Наличными'}</div>
+                        </div>`;
+                });
+            }
+            document.getElementById('order-history-overlay').style.display = 'flex';
         });
     }
 
-    function logout() {
-        localStorage.removeItem('tajkomp_user');
-        location.reload();
-    }
-
-    function deleteAccount() {
-        if(confirm("Удалить аккаунт навсегда?")) {
-            db.ref('users/' + currentUser.phone.replace('+', '')).remove().then(() => {
-                logout();
-            });
-        }
-    }
+    function logout() { localStorage.removeItem('tajkomp_user'); location.reload(); }
+    function deleteAccount() { if(confirm("Удалить аккаунт навсегда?")) db.ref('users/' + currentUser.phone.replace('+', '')).remove().then(() => logout()); }
 
     function openAdminUsers() {
         db.ref('users').once('value', snap => {
@@ -1362,22 +1521,86 @@
                         <img src="${u.avatar || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="user-avatar-list">
                         <div style="flex:1">
                             <div style="font-weight:800">${u.name}</div>
-                            <div style="font-size:0.8rem; opacity:0.7">${u.phone} | Рожд: ${u.birthday || '---'}</div>
+                            <div style="font-size:0.8rem; opacity:0.7">${u.phone}</div>
                             <div style="font-size:0.7rem; color:var(--primary)">Pass: ${u.pass}</div>
                         </div>
                         <i class="fas fa-trash" onclick="deleteUserByAdmin('${id}')" style="color:#ff4444; cursor:pointer;"></i>
-                    </div>
-                `;
+                    </div>`;
             }
             document.getElementById('admin-users-overlay').style.display = 'flex';
         });
     }
 
-    function deleteUserByAdmin(id) {
-        if(confirm("Удалить клиента?")) {
-            db.ref('users/' + id).remove().then(() => openAdminUsers());
+    function deleteUserByAdmin(id) { if(confirm("Удалить клиента?")) db.ref('users/' + id).remove().then(() => openAdminUsers()); }
+
+    // --- ФУНКЦИИ КОНСУЛЬТАНТА ---
+    function toggleChat() {
+        const win = document.getElementById('chat-window');
+        win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    function botAnswer(type) {
+        const box = document.getElementById('chat-messages');
+        let reply = "";
+        if(type === 'Как заказать?') reply = "Выберите товар, добавьте в корзину и нажмите 'Оформить'. Мы свяжемся с вами!";
+        if(type === 'Оплата') reply = "Мы принимаем наличные и рассрочку через Алиф.";
+        if(type === 'Где вы находитесь?') reply = "Наш адрес: г. Душанбе, рынок Корвон.";
+        
+        box.innerHTML += `<div class="msg msg-user">${type}</div>`;
+        setTimeout(() => {
+            box.innerHTML += `<div class="msg msg-bot">${reply}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }, 500);
+    }
+
+    function sendToTG() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        if(!text) return;
+        
+        const url = `https://t.me/IDIEVW?text=${encodeURIComponent("Вопрос с сайта TajKomp: " + text)}`;
+        window.open(url, '_blank');
+        input.value = "";
+        toggleChat();
+    }
+
+    // --- ФУНКЦИИ УСТАНОВКИ ПРИЛОЖЕНИЯ ---
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // Показываем баннер только если пользователь вошел
+        if(currentUser) document.getElementById('pwa-install-banner').style.display = 'block';
+    });
+
+    function checkPWA() {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        
+        if (isStandalone) return; // Уже установлено
+
+        if(currentUser) {
+            if (isIOS) {
+                document.getElementById('pwa-install-banner').style.display = 'block';
+            }
         }
     }
+
+    document.getElementById('pwa-btn').addEventListener('click', async () => {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        
+        if (isIOS) {
+            document.getElementById('ios-guide').style.display = 'flex';
+            document.getElementById('pwa-install-banner').style.display = 'none';
+        } else if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') document.getElementById('pwa-install-banner').style.display = 'none';
+            deferredPrompt = null;
+        } else {
+            alert("Для установки на Android: Нажмите на три точки в браузере и выберите 'Установить приложение'.");
+        }
+    });
 
     updateAuthBtn();
     render();
