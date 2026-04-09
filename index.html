@@ -100,51 +100,182 @@
         }
         .preloader-hidden { opacity: 0; visibility: hidden; }
 
-        /* ШАПКА - ИСПРАВЛЕНО ДЛЯ МОБИЛЬНЫХ */
+        /* --- ОБНОВЛЕННАЯ ШАПКА В ОДИН РЯД --- */
         header { 
             background: linear-gradient(135deg, var(--primary), var(--primary-hover)); 
-            padding: 20px; 
-            text-align: center; 
+            padding: 10px 20px; 
             color: white; 
             box-shadow: 0 4px 30px rgba(0,0,0,0.5); 
-            position: relative; 
+            position: sticky; top: 0; z-index: 1000;
         }
-        .header-top-row {
+        .header-main-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto 15px auto;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 15px;
         }
-        .header-btns-left { display: flex; gap: 10px; }
-
-        .theme-toggle, .admin-trigger { 
-            width: 45px; height: 45px; border-radius: 12px; 
-            background: white; border: 1px solid rgba(0,0,0,0.1); 
-            color: var(--primary); cursor: pointer; transition: var(--transition); 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-            display: flex; align-items: center; justify-content: center;
-        }
-        .cart-btn { 
-            background: white; color: var(--primary); padding: 10px 20px; 
-            border-radius: 50px; font-weight: 800; cursor: pointer; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2); border: none; transition: var(--transition); 
-        }
-
-        #smart-search { width: 100%; max-width: 600px; padding: 14px 25px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.15); color: white; outline: none; margin-top: 10px; backdrop-filter: blur(10px); transition: var(--transition); }
-        #smart-search::placeholder { color: rgba(255,255,255,0.7); }
-        #smart-search:focus { background: rgba(255,255,255,0.25); box-shadow: 0 0 20px rgba(255,255,255,0.2); }
-
-        /* НАВИГАЦИЯ */
-        nav { background: var(--card); padding: 12px; position: sticky; top: 0; z-index: 900; border-bottom: 1px solid rgba(0,122,255,0.2); backdrop-filter: blur(15px); }
-        .nav-container { display: flex; overflow-x: auto; gap: 12px; max-width: 1300px; margin: 0 auto; scrollbar-width: none; }
-        .nav-link { padding: 10px 22px; background: rgba(128,128,128,0.05); border-radius: 50px; cursor: pointer; font-size: 0.85rem; transition: var(--transition); white-space: nowrap; color: #8899A6; font-weight: 600; border: 1px solid transparent; }
-        .nav-link:hover { color: var(--primary); background: rgba(0,122,255,0.05); }
-        .nav-link.active { background: var(--primary); color: white; box-shadow: var(--glow); border-color: var(--accent); }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; cursor: pointer; }
         
-        .sub-nav { display: none; background: rgba(0,122,255,0.03); padding: 12px; justify-content: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(0,122,255,0.1); }
-        .sub-link { padding: 8px 18px; background: rgba(128,128,128,0.08); border-radius: 50px; cursor: pointer; font-size: 0.75rem; color: #8899A6; transition: var(--transition); }
-        .sub-link.active { background: var(--accent); color: #000; font-weight: bold; }
+        .catalog-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .catalog-btn:hover { background: rgba(255,255,255,0.3); }
+
+        #smart-search { 
+            flex: 1; 
+            max-width: 600px; 
+            padding: 12px 20px; 
+            border-radius: 12px; 
+            border: none; 
+            background: rgba(255,255,255,0.15); 
+            color: white; 
+            outline: none; 
+            backdrop-filter: blur(10px); 
+            transition: var(--transition); 
+        }
+        #smart-search::placeholder { color: rgba(255,255,255,0.7); }
+        #smart-search:focus { background: rgba(255,255,255,0.25); }
+
+        .header-right { display: flex; align-items: center; gap: 10px; }
+
+        /* --- СТИЛЬНЫЕ КНОПКИ ТЕМЫ И АДМИНА --- */
+        .theme-toggle, .admin-trigger, .fav-btn-header { 
+            width: 42px; 
+            height: 42px; 
+            border-radius: 12px; 
+            background: rgba(255, 255, 255, 0.15); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            color: white; 
+            cursor: pointer; 
+            transition: var(--transition); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 1.1rem;
+            backdrop-filter: blur(5px);
+        }
+        .theme-toggle:hover, .admin-trigger:hover, .fav-btn-header:hover { 
+            background: white; 
+            color: var(--primary); 
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .fav-btn-header.active { background: #ff4757; color: white; border-color: #ff4757; }
+
+        /* --- БОКОВОЕ МЕНЮ КАТАЛОГОВ (SIDEBAR) --- */
+        #catalog-sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100%;
+            background: var(--card);
+            z-index: 5000;
+            transition: var(--transition);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+        #catalog-sidebar.active { left: 0; }
+        .sidebar-close { align-self: flex-end; font-size: 1.5rem; cursor: pointer; color: var(--text); margin-bottom: 20px; }
+        .sidebar-title { font-size: 1.2rem; font-weight: 800; color: var(--primary); margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
+        
+        .cat-list-sidebar { overflow-y: auto; flex: 1; }
+        .cat-item-side {
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cat-item-side:hover { background: rgba(0,122,255,0.05); color: var(--primary); }
+        .cat-item-side.active { background: var(--primary); color: white; }
+
+        /* Фоновая подложка для сайдбара */
+        #sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; z-index: 4999; backdrop-filter: blur(3px);
+        }
+
+        /* --- ПОДМЕНЮ (ПОДКАТЕГОРИИ) --- */
+        .sub-nav {
+            display: none;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px auto;
+            max-width: 1300px;
+            padding: 0 15px;
+        }
+        .sub-link {
+            padding: 8px 16px;
+            background: var(--card);
+            border: 1px solid rgba(0,122,255,0.2);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text);
+        }
+        .sub-link:hover { border-color: var(--primary); color: var(--primary); background: rgba(0,122,255,0.05); }
+        .sub-link.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,122,255,0.3); }
+
+        /* --- ИСПРАВЛЕННЫЕ СТИЛИ БАНЕРА (16см x 4см) --- */
+        .promo-slider-container { 
+            width: 16cm; /* Ширина банера */
+            height: 4cm; /* Высота банера */
+            margin: 20px auto; /* Центрирование */
+            padding: 0; 
+            position: relative; 
+            overflow: hidden; 
+            display: none; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: #000; 
+        }
+        .promo-slider { display: flex; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); height: 100%; }
+        .promo-slide { 
+            min-width: 100%; 
+            height: 100%; 
+            position: relative; 
+            cursor: pointer; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .promo-slide img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; /* ФОТО ПОМЕЩАЕТСЯ ПОЛНОСТЬЮ БЕЗ ОБРЕЗКИ */
+        }
+
+        @media (max-width: 16.5cm) {
+            .promo-slider-container {
+                width: 95%; /* На маленьких экранах банер занимает почти всю ширину */
+                height: auto;
+                aspect-ratio: 16 / 4; /* Сохраняет пропорции 16:4 */
+            }
+        }
 
         /* СЕТКА ТОВАРОВ */
         .container { flex: 1; max-width: 1300px; margin: 25px auto; padding: 0 15px; }
@@ -158,6 +289,27 @@
         .p-img-container { width: 100%; aspect-ratio: 1/1; overflow: hidden; background-color: #000b18; display: flex; align-items: center; justify-content: center; }
         .p-img-container img { width: 100%; height: 100%; object-fit: cover; }
         
+        /* ИЗБРАННОЕ НА КАРТОЧКЕ */
+        .fav-card-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.8);
+            border: none;
+            color: #5B7083;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .fav-card-btn:hover { transform: scale(1.1); color: #ff4757; }
+        .fav-card-btn.active { color: #ff4757; background: #fff; }
+
         .promo-badge { position: absolute; top: 12px; left: 12px; background: linear-gradient(45deg, #00F2FF, #007AFF); color: #000; padding: 5px 12px; border-radius: 50px; font-size: 0.65rem; font-weight: 800; z-index: 5; box-shadow: 0 4px 10px rgba(0,242,255,0.4); }
         
         .p-info { padding: 18px; flex-grow: 1; display: flex; flex-direction: column; }
@@ -170,7 +322,6 @@
         .btn-buy:hover { transform: scale(1.03); box-shadow: 0 5px 20px rgba(0,122,255,0.5); }
         .btn-buy:active { transform: scale(0.97); }
 
-        /* НОВОЕ: Кнопка добавлено и счетчик */
         .btn-added { background: #2ecc71 !important; }
         .qty-controls { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 10px; background: rgba(0,122,255,0.05); padding: 8px; border-radius: 12px; }
         .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--primary); background: white; color: var(--primary); cursor: pointer; font-weight: bold; }
@@ -205,7 +356,6 @@
         @media (max-width: 450px) { #cart-sidebar { width: 100%; right: -100%; } }
         #cart-sidebar.active { right: 0; }
 
-        /* --- СТИЛИ ДЛЯ РЕДАКТОРА КАТАЛОГОВ --- */
         .cat-item { display: flex; align-items: center; justify-content: space-between; background: rgba(0,122,255,0.05); padding: 10px 15px; border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(0,122,255,0.1); }
         .cat-item span { font-weight: 600; font-size: 0.9rem; }
         .cat-item i { cursor: pointer; color: #ff4444; }
@@ -217,12 +367,20 @@
         
         .user-list-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(0,122,255,0.05); border-radius: 15px; margin-bottom: 10px; }
         .user-avatar-list { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
-        .auth-btn { background: white; color: var(--primary); padding: 8px 15px; border-radius: 50px; font-weight: 700; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); transition: var(--transition); margin-right: 10px; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; }
+        .auth-btn { background: white; color: var(--primary); padding: 8px 15px; border-radius: 50px; font-weight: 700; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); transition: var(--transition); font-size: 0.8rem; display: flex; align-items: center; gap: 8px; }
         .auth-btn:hover { background: var(--accent); color: #000; transform: translateY(-2px); }
         .user-avatar-mini { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid var(--primary); }
         .phone-prefix-container { position: relative; display: flex; align-items: center; margin-bottom: 15px; }
         .phone-prefix { position: absolute; left: 15px; font-weight: 700; color: var(--primary); pointer-events: none; z-index: 5; }
         .phone-input { padding-left: 60px !important; }
+
+        @media (max-width: 800px) {
+            .header-main-row { flex-wrap: wrap; }
+            #smart-search { order: 3; max-width: 100%; width: 100%; margin-top: 10px; }
+            .header-logo { font-size: 1.2rem; }
+            .catalog-btn span { display: none; }
+            .auth-btn span { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -242,22 +400,43 @@
 </div>
 
 <header>
-    <div class="header-top-row">
-        <div class="header-btns-left">
+    <div class="header-main-row">
+        <div class="header-left">
+            <div class="header-logo" onclick="location.reload()">TajKomp</div>
+            <button class="catalog-btn" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i> <span>Каталог</span>
+            </button>
+        </div>
+
+        <input type="text" id="smart-search" placeholder="Поиск современной техники..." oninput="render()">
+
+        <div class="header-right">
             <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-sun"></i></button>
             <button class="admin-trigger" onclick="handleAdmin()"><i class="fas fa-user-shield"></i></button>
             <button class="auth-btn" id="main-auth-trigger" onclick="openAuth()">
-                <i class="fas fa-user-circle"></i> Личный кабинет
+                <i class="fas fa-user-circle"></i> <span>Войти</span>
             </button>
+            <button class="fav-btn-header" id="fav-filter-btn" onclick="toggleFavFilter()">
+                <i class="fas fa-heart"></i>
+            </button>
+            <div class="cart-btn" onclick="toggleCart()" style="padding: 10px 15px; border-radius: 12px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
+            </div>
         </div>
-        <div class="cart-btn" onclick="toggleCart()">🛒 <span id="cart-count">0</span></div>
     </div>
-
-    <h1 style="letter-spacing: 2px; font-weight: 800;">TajKomp</h1>
-    <input type="text" id="smart-search" placeholder="Поиск современной техники..." oninput="render()">
 </header>
 
-<nav><div class="nav-container" id="category-list"></div></nav>
+<div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+<div id="catalog-sidebar">
+    <div class="sidebar-close" onclick="toggleSidebar()">&times;</div>
+    <div class="sidebar-title">Категории</div>
+    <div class="cat-list-sidebar" id="sidebar-cat-list"></div>
+</div>
+
+<div class="promo-slider-container" id="promo-container">
+    <div class="promo-slider" id="promo-slider"></div>
+</div>
+
 <div id="pc-sub-nav" class="sub-nav"></div>
 
 <div class="container">
@@ -366,6 +545,19 @@
     </div>
 </div>
 
+<div id="admin-promo-overlay" class="overlay">
+    <div class="modal-content">
+        <span class="close-btn" onclick="document.getElementById('admin-promo-overlay').style.display='none'">&times;</span>
+        <h2 style="color:var(--primary); margin-bottom:15px;">Управление рекламой</h2>
+        <div id="admin-promo-list" style="margin-bottom:20px;"></div>
+        <hr style="margin-bottom:15px; opacity:0.2;">
+        <h4>Добавить баннер</h4>
+        <input type="text" id="promo-link" class="admin-input" placeholder="Ссылка (необязательно)">
+        <label class="file-label" for="promo-file"><i class="fas fa-image"></i> Выбрать баннер</label>
+        <input type="file" id="promo-file" accept="image/*" style="display:none;" onchange="uploadPromoBanner(this.files)">
+    </div>
+</div>
+
 <div id="admin-overlay" class="overlay">
     <div class="modal-content">
         <span class="close-btn" onclick="closeAdmin()">&times;</span>
@@ -374,6 +566,7 @@
         <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap: wrap;">
             <button onclick="toggleCatEditor()" style="background:var(--accent); color:#000; border:none; padding:8px 15px; border-radius:10px; font-weight:700; cursor:pointer; font-size:0.8rem;">⚙️ Категории</button>
             <button onclick="openAdminUsers()" style="background:var(--primary); color:#fff; border:none; padding:8px 15px; border-radius:10px; font-weight:700; cursor:pointer; font-size:0.8rem;"><i class="fas fa-users"></i> Клиенты</button>
+            <button onclick="document.getElementById('admin-promo-overlay').style.display='flex'; loadAdminPromoList();" style="background:#e67e22; color:#fff; border:none; padding:8px 15px; border-radius:10px; font-weight:700; cursor:pointer; font-size:0.8rem;"><i class="fas fa-ad"></i> Реклама</button>
             <button onclick="document.getElementById('admin-pass-overlay').style.display='flex'" style="background:#f1c40f; color:#000; border:none; padding:8px 15px; border-radius:10px; font-weight:700; cursor:pointer; font-size:0.8rem;"><i class="fas fa-key"></i></button>
         </div>
 
@@ -381,7 +574,7 @@
             <h4 style="margin-bottom:10px;">Редактор каталогов</h4>
             <p style="font-size: 0.7rem; margin-bottom: 5px; opacity: 0.7;">1. Управление основными:</p>
             <div id="main-cat-list-edit" class="cat-manager-list" style="margin-bottom:15px;"></div>
-            <div style="display:flex; gap:5px; margin-bottom:20px;">
+            <div style="display:flex; gap:5px; margin-bottom:200px;">
                 <input type="text" id="new-main-cat-name" placeholder="Новая категория" class="admin-input" style="margin:0; padding:8px; font-size:0.8rem;">
                 <button onclick="addMainCategory()" style="background:var(--primary); color:#fff; border:none; padding:0 15px; border-radius:10px;">+</button>
             </div>
@@ -496,13 +689,14 @@
 
     let cart = [], currentCat = "Все", currentSub = "Все", isAdmin = false;
     let currentImgsArray = []; 
+    let favFilterActive = false;
+    let favorites = JSON.parse(localStorage.getItem('tajkomp_favs')) || [];
 
     let currentUser = JSON.parse(localStorage.getItem('tajkomp_user')) || null;
     let loginAttempts = 0;
     let regAvatarBase64 = "";
     let authMode = "login"; 
 
-    // НОВОЕ: Загрузка пароля админа
     let adminPass = "idiev050905";
     db.ref('settings/adminPass').on('value', (snap) => {
         if(snap.val()) adminPass = snap.val();
@@ -523,6 +717,75 @@
         updateCategoryMenus();
         render();
     });
+
+    let promoBanners = [];
+    let currentSlide = 0;
+    let slideTimer = null;
+
+    db.ref('promo').on('value', snap => {
+        const data = snap.val();
+        promoBanners = data ? Object.values(data) : [];
+        renderPromoSlider();
+    });
+
+    function renderPromoSlider() {
+        const container = document.getElementById('promo-container');
+        const slider = document.getElementById('promo-slider');
+        if(promoBanners.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+        container.style.display = 'block';
+        slider.innerHTML = promoBanners.map(b => `
+            <div class="promo-slide" onclick="if('${b.link}') window.open('${b.link}', '_blank')">
+                <img src="${b.img}">
+            </div>
+        `).join('');
+        
+        startSlider();
+    }
+
+    function startSlider() {
+        if(slideTimer) clearInterval(slideTimer);
+        currentSlide = 0;
+        const slider = document.getElementById('promo-slider');
+        slider.style.transform = `translateX(0)`;
+        
+        if(promoBanners.length > 1) {
+            slideTimer = setInterval(() => {
+                currentSlide = (currentSlide + 1) % promoBanners.length;
+                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            }, 4000);
+        }
+    }
+
+    function uploadPromoBanner(files) {
+        const reader = new FileReader();
+        const link = document.getElementById('promo-link').value;
+        reader.onload = (e) => {
+            const id = Date.now();
+            db.ref('promo/' + id).set({ id, img: e.target.result, link }).then(() => {
+                document.getElementById('promo-link').value = "";
+                loadAdminPromoList();
+            });
+        };
+        reader.readAsDataURL(files[0]);
+    }
+
+    function loadAdminPromoList() {
+        const list = document.getElementById('admin-promo-list');
+        list.innerHTML = promoBanners.map(b => `
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;">
+                <img src="${b.img}" style="width:100px; height:50px; object-fit:cover; border-radius:5px;">
+                <div style="flex:1; font-size:0.7rem; overflow:hidden;">${b.link || 'Нет ссылки'}</div>
+                <i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="deletePromo('${b.id}')"></i>
+            </div>
+        `).join('') || '<p style="opacity:0.5; text-align:center;">Нет активной рекламы</p>';
+    }
+
+    function deletePromo(id) {
+        if(confirm("Удалить баннер?")) db.ref('promo/' + id).remove().then(() => loadAdminPromoList());
+    }
 
     function updateCategoryMenus() {
         const pCat = document.getElementById('p-cat');
@@ -550,6 +813,19 @@
             selForSub.innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join('');
             loadSubCatEditor();
         }
+
+        const sideList = document.getElementById('sidebar-cat-list');
+        if(sideList) {
+            sideList.innerHTML = `<div class="cat-item-side ${currentCat==='Все'?'active':''}" onclick="setCat('Все', this); toggleSidebar()">🏠 Все товары</div>` + 
+                categories.map(c => `<div class="cat-item-side ${currentCat===c?'active':''}" onclick="setCat('${c}', this); toggleSidebar()">${c} <i class="fas fa-chevron-right" style="font-size:0.7rem; opacity:0.5"></i></div>`).join('');
+        }
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('catalog-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const isActive = sidebar.classList.toggle('active');
+        overlay.style.display = isActive ? 'block' : 'none';
     }
 
     function loadSubCatEditor() {
@@ -639,7 +915,6 @@
         }
     }
     
-    // НОВОЕ: Сохранение пароля админа
     function saveAdminPass() {
         const newPass = document.getElementById('new-admin-pass').value;
         if(newPass.length < 4) return alert("Пароль слишком короткий!");
@@ -663,14 +938,39 @@
         db.ref('products/' + id).set(pData).then(() => closeAdmin());
     }
 
+    function toggleFav(id, e) {
+        if(e) e.stopPropagation();
+        if(!currentUser) {
+            openAuth();
+            return;
+        }
+        const index = favorites.indexOf(id);
+        if(index > -1) {
+            favorites.splice(index, 1);
+        } else {
+            favorites.push(id);
+        }
+        localStorage.setItem('tajkomp_favs', JSON.stringify(favorites));
+        render();
+    }
+
+    function toggleFavFilter() {
+        favFilterActive = !favFilterActive;
+        document.getElementById('fav-filter-btn').classList.toggle('active');
+        render();
+    }
+
     function render() {
         const grid = document.getElementById('main-grid');
         const search = document.getElementById('smart-search').value.toLowerCase();
         
-        document.getElementById('category-list').innerHTML = `<div class="nav-link ${currentCat==='Все'?'active':''}" onclick="setCat('Все', this)">Все</div>` + 
-            categories.map(c => `<div class="nav-link ${currentCat===c?'active':''}" onclick="setCat('${c}', this)">${c}</div>`).join('');
+        document.querySelectorAll('.cat-item-side').forEach(el => {
+            if(el.innerText.includes(currentCat)) el.classList.add('active');
+            else el.classList.remove('active');
+        });
 
         const filtered = products.filter(p => {
+            if(favFilterActive && !favorites.includes(p.id)) return false;
             let match = currentCat === "Все";
             if (!match) {
                 if (p.cat === currentCat) match = true;
@@ -682,13 +982,15 @@
 
         grid.innerHTML = filtered.map(p => {
             const imageSrc = (p.imgs && p.imgs.length > 0) ? p.imgs[0] : '';
-            
-            // НОВОЕ: Проверка количества в корзине
             const inCart = cart.find(x => x.id == p.id);
             const qty = inCart ? inCart.qty : 0;
+            const isFav = favorites.includes(p.id);
             
             return `
             <div class="product-card" onclick="openP(${p.id})">
+                <button class="fav-card-btn ${isFav?'active':''}" onclick="toggleFav(${p.id}, event)">
+                    <i class="${isFav?'fas':'far'} fa-heart"></i>
+                </button>
                 <div class="admin-controls" style="display:${isAdmin?'flex':'none'}">
                     <button class="admin-btn-card" onclick="editP(${p.id}, event)" style="background:#2ecc71"><i class="fas fa-edit"></i></button>
                     <button class="admin-btn-card" onclick="deleteP(${p.id}, event)" style="background:#e74c3c"><i class="fas fa-trash"></i></button>
@@ -759,7 +1061,6 @@
         document.getElementById('product-overlay').style.display = 'flex';
     }
 
-    // НОВОЕ: Изменение количества
     function changeQty(id, delta) {
         const item = cart.find(x => x.id == id);
         if(item) {
@@ -861,8 +1162,6 @@
         document.querySelector('.theme-toggle i').className = isD ? 'fas fa-sun' : 'fas fa-moon';
     }
 
-    // --- ФУНКЦИИ АВТОРИЗАЦИИ ---
-
     function openAuth() {
         if(currentUser) {
             showProfile();
@@ -887,7 +1186,7 @@
 
     function checkUserByPhone() {
         const phone = "992" + document.getElementById('auth-phone').value;
-        if(phone.length < 12) return alert("Введите полный номер!");
+        if(phone.length < 9) return alert("Введите правильный номер!");
         
         db.ref('users/' + phone).once('value', snap => {
             const exists = snap.exists();
@@ -998,7 +1297,7 @@
         if(currentUser) {
             btn.innerHTML = `<img src="${currentUser.avatar || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="user-avatar-mini"> ${currentUser.name.split(' ')[0]}`;
         } else {
-            btn.innerHTML = `<i class="fas fa-user-circle"></i> Личный кабинет`;
+            btn.innerHTML = `<i class="fas fa-user-circle"></i> <span>Войти</span>`;
         }
     }
 
