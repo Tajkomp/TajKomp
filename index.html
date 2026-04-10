@@ -26,7 +26,14 @@
     <meta name="theme-color" content="#007AFF">
     <script>
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
+        navigator.serviceWorker.register('sw.js').then(reg => {
+            console.log('SW зарегистрирован');
+            if (Notification.permission === 'default') {
+                setTimeout(() => {
+                    Notification.requestPermission();
+                }, 5000);
+            }
+        });
       }
     </script>
     
@@ -79,6 +86,19 @@
             font-size: 0.7rem;
             font-weight: 900;
             z-index: 5;
+        }
+
+        /* Добавленные стили для уведомлений */
+        .push-notify-btn {
+            background: #ff4757;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+            display: none;
         }
 
         /* Исправление видимости текста и иконок соцсетей */
@@ -662,7 +682,7 @@
 <div id="reg-details-overlay" class="overlay">
     <div class="modal-content">
         <span class="close-btn" onclick="document.getElementById('reg-details-overlay').style.display='none'">&times;</span>
-        <h2 style="color:var(--primary); margin-bottom:20px;">Регистрация</h2>
+        <h2 id="auth-title" style="color:var(--primary); margin-bottom:20px;">Регистрация</h2>
         <input type="text" id="reg-name" class="admin-input" placeholder="Ваше имя">
         <div style="display:flex; gap:10px;">
             <input type="number" id="reg-day" class="admin-input" placeholder="День">
@@ -1689,6 +1709,33 @@
     function checkPWA() {
         if(currentUser && /iPad|iPhone|iPod/.test(navigator.userAgent)) document.getElementById('pwa-install-banner').style.display = 'block';
     }
+
+    // --- ЛОГИКА ПРИВЛЕКАТЕЛЬНЫХ УВЕДОМЛЕНИЙ ---
+    function sendProductNotification() {
+        if (Notification.permission !== "granted") return;
+        if (products.length === 0) return;
+        const randomProduct = products[Math.floor(Math.random() * products.length)];
+        const messages = [
+            `🔥 Хит продаж: ${randomProduct.name}!`,
+            `✨ Посмотрите на это: ${randomProduct.name} уже в наличии!`,
+            `🚀 Обновите свой ПК: ${randomProduct.name} ждет вас!`,
+            `🎁 Подарок для себя: ${randomProduct.name} в TajKomp!`
+        ];
+        const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+        navigator.serviceWorker.ready.then(registration => {
+            registration.showNotification("TajKomp | Лучшие цены", {
+                body: `${randomMsg} \nЦена: ${randomProduct.price} смн. Нажмите, чтобы купить!`,
+                icon: 'favicon.ico',
+                image: randomProduct.imgs ? randomProduct.imgs[0] : '',
+                badge: 'favicon.ico',
+                tag: 'product-ads',
+                data: { url: window.location.href }
+            });
+        });
+    }
+
+    setInterval(sendProductNotification, 3600000);
+    setTimeout(sendProductNotification, 60000); 
 
     updateAuthBtn();
     render();
