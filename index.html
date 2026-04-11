@@ -1740,5 +1740,72 @@
     updateAuthBtn();
     render();
 </script>
+<div id="lockout-overlay" class="overlay" style="z-index: 12000;">
+    <div class="modal-content" style="text-align:center; border: 2px solid #ff4757;">
+        <div style="font-size:3.5rem; color:#ff4757; margin-bottom:15px;"><i class="fas fa-exclamation-triangle"></i></div>
+        <h2 style="color:var(--text); margin-bottom:10px;">Доступ ограничен</h2>
+        <p style="margin-bottom:25px; line-height:1.5; opacity:0.9;">Вы 3 раза ввели неправильный пароль. Пожалуйста, сбросьте пароль через поддержку или попробуйте снова.</p>
+        
+        <div style="display:flex; flex-direction:column; gap:12px;">
+            <button class="btn-buy" style="background:#0088cc;" onclick="resetPasswordViaTG()">
+                <i class="fab fa-telegram-plane"></i> Сбросить пароль
+            </button>
+            <button class="btn-buy" style="background:transparent; border:1px solid var(--primary); color:var(--primary);" onclick="retryPasswordEntry()">
+                Повторить попытку
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Инициализация счетчика
+    let failedAttempts = 0;
+
+    // Перехватываем оригинальную функцию attemptLogin
+    const originalAttemptLogin = window.attemptLogin;
+
+    window.attemptLogin = function() {
+        const passInput = document.getElementById('login-password-input');
+        const pass = passInput.value;
+        const phone = window.tempPhone;
+
+        db.ref('users/' + phone).once('value', snap => {
+            const user = snap.val();
+            
+            if (user.pass === pass) {
+                // Если пароль верный - сбрасываем счетчик и вызываем оригинал
+                failedAttempts = 0;
+                originalAttemptLogin();
+            } else {
+                // Если пароль неверный
+                failedAttempts++;
+                
+                if (failedAttempts >= 3) {
+                    // Закрываем окно ввода и показываем блокировку
+                    document.getElementById('login-pass-overlay').style.display = 'none';
+                    document.getElementById('lockout-overlay').style.display = 'flex';
+                    passInput.value = ""; // Очищаем поле
+                } else {
+                    alert("Неверный пароль! Осталось попыток: " + (3 - failedAttempts));
+                }
+            }
+        });
+    };
+
+    // Функция перехода в Телеграм
+    function resetPasswordViaTG() {
+        const userName = currentUser ? currentUser.name : (window.tempPhone || "Клиент");
+        const userPhone = currentUser ? currentUser.phone : ("+" + window.tempPhone);
+        const message = encodeURIComponent(`Я забыл пароль\nИмя: ${userName}\nНомер: ${userPhone}`);
+        window.open(`https://t.me/IDIEVW?text=${message}`, '_blank');
+    }
+
+    // Функция повтора (дает еще 3 попытки)
+    function retryPasswordEntry() {
+        failedAttempts = 0;
+        document.getElementById('lockout-overlay').style.display = 'none';
+        document.getElementById('login-pass-overlay').style.display = 'flex';
+    }
+</script>
 </body>
 </html>
