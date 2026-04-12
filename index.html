@@ -456,8 +456,8 @@
         .welcome-text { font-size: 2rem; font-weight: 800; text-align: center; background: linear-gradient(to right, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; opacity: 0; transform: translateY(20px); animation: fadeInUp 0.5s forwards; }
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
         
-        .user-list-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(0,122,255,0.05); border-radius: 15px; margin-bottom: 10px; }
-        .user-avatar-list { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+        .user-list-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(0,122,255,0.05); border-radius: 15px; margin-bottom: 10px; border: 1px solid rgba(0,122,255,0.1); }
+        .user-avatar-list { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
         .auth-btn { background: white; color: var(--primary); padding: 8px 15px; border-radius: 12px; font-weight: 700; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); transition: var(--transition); font-size: 0.8rem; display: flex; align-items: center; gap: 8px; }
         .auth-btn:hover { background: var(--accent); color: #000; transform: translateY(-2px); }
         .user-avatar-mini { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid var(--primary); }
@@ -554,7 +554,6 @@
 
         <div class="header-right">
             <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-sun"></i></button>
-            <button class="admin-trigger" onclick="handleAdmin()"><i class="fas fa-user-shield"></i></button>
             <button class="auth-btn" id="main-auth-trigger" onclick="openAuth()">
                 <i class="fas fa-user-circle"></i> <span>Войти</span>
             </button>
@@ -607,7 +606,7 @@
         <span class="close-btn" onclick="document.getElementById('premium-modal').style.display='none'">&times;</span>
         <div style="font-size:3rem; color:var(--gold); margin-bottom:15px;"><i class="fas fa-crown"></i></div>
         <h2 class="gold-text">Premium Класс</h2>
-        <h3 class="gold-text" style="font-size:1.2rem; margin: 10px 0;">29,99 TJS на 3 месяца</h3>
+        <h3 class="gold-text" style="font-size:1.2rem; margin: 10px 0;">19,99 TJS на 3 месяца</h3>
         <div style="text-align:left; margin: 20px 0; font-size: 0.9rem; line-height:1.6;">
             <p>🌟 <b>Кредит до 300с:</b> Только по паспорту!</p>
             <p>🌟 <b>Скидки:</b> До -10% на все товары!</p>
@@ -635,7 +634,7 @@
     <div class="modal-content">
         <span class="close-btn" onclick="document.getElementById('prem-pay-modal').style.display='none'">&times;</span>
         <h3 style="margin-bottom:15px; color:var(--gold);">Оплата подписки</h3>
-        <p style="font-size:0.9rem; margin-bottom:10px;">Переведите <b>29.99 смн</b> на:</p>
+        <p style="font-size:0.9rem; margin-bottom:10px;">Переведите <b>19.99 смн</b> на:</p>
         <div style="background:rgba(255,215,0,0.1); padding:15px; border-radius:15px; border:1px solid var(--gold); margin-bottom:20px;">
             <p><b>DC:</b> +992 978 11 78 11</p>
             <p><b>Алиф:</b> +992 978 11 78 11</p>
@@ -663,6 +662,7 @@
         <div style="display:flex; flex-direction:column; gap:15px;">
             <button class="btn-buy" onclick="openLoginPhone()">Вход</button>
             <button class="btn-buy" style="background:var(--accent); color:#000;" onclick="openRegPhone()">Регистрация</button>
+            <button class="btn-buy" style="background:#2c3e50;" onclick="handleAdmin()">Админ</button>
         </div>
     </div>
 </div>
@@ -952,7 +952,9 @@
     const botToken = '8681756976:AAHIRkRSGduktZCfUeChoABowJ6VH8cwVlg';
     const chatId = '8506743201';
 
-    let products = [];
+    let allProducts = []; // Все товары из БД
+    let products = [];    // Видимые товары
+    let itemsToShow = 10; // Сколько показывать изначально
     let categories = ["Ноутбуки", "Сборка ПК", "Принтеры", "Телефон", "Монитор", "Наушник", "Wi-Fi Роутер", "Повербанк", "SSD и HDD", "Аксессуары", "Клавиатура и Мышка", "Моноблоки"];
     
     let subCatsMap = {
@@ -1284,18 +1286,42 @@
         });
     }
 
+    // ЛОГИКА ЗАГРУЗКИ: Получаем все товары, но в массив products кладем по частям
     db.ref('products').on('value', (snapshot) => {
         const data = snapshot.val();
-        products = data ? Object.values(data) : [];
+        allProducts = data ? Object.values(data) : [];
+        
+        // --- ФУНКЦИЯ MIX: Перемешивание товаров ---
+        allProducts = allProducts.sort(() => Math.random() - 0.5);
+
+        itemsToShow = 10; // Сброс при обновлении БД
         document.getElementById('loader').style.display = 'none';
         render();
     });
 
+    // ЛОГИКА INFINITE SCROLL: Догрузка при покрутке
+    window.onscroll = function() {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+            if(itemsToShow < allProducts.length) {
+                itemsToShow += 10;
+                render();
+            }
+        }
+    };
+
     function handleAdmin() {
-        if (!isAdmin && prompt("Пароль доступа:") === adminPass) {
-            isAdmin = true;
-            document.getElementById('add-p-btn').style.display = 'flex';
-            render();
+        if (!isAdmin) {
+            const p = prompt("Пароль доступа:");
+            if(p === adminPass) {
+                isAdmin = true;
+                document.getElementById('add-p-btn').style.display = 'flex';
+                document.getElementById('auth-choice-overlay').style.display = 'none';
+                render();
+            } else if(p !== null) {
+                alert("Неверный пароль!");
+            }
+        } else {
+            openAdminModal();
         }
     }
     
@@ -1343,7 +1369,8 @@
         const search = document.getElementById('smart-search').value.toLowerCase();
         const isPremium = currentUser && currentUser.premium;
 
-        const filtered = products.filter(p => {
+        // Фильтрация
+        let filtered = allProducts.filter(p => {
             if(favFilterActive && !favorites.includes(p.id)) return false;
             let match = currentCat === "Все";
             if (!match) {
@@ -1354,7 +1381,10 @@
             return match && (p.name.toLowerCase().includes(search) || (p.desc && p.desc.toLowerCase().includes(search)));
         });
 
-        grid.innerHTML = filtered.map(p => {
+        // ПАГИНАЦИЯ: Ограничиваем количество отрисованных товаров
+        const paginatedProducts = filtered.slice(0, itemsToShow);
+
+        grid.innerHTML = paginatedProducts.map(p => {
             const imageSrc = (p.imgs && p.imgs.length > 0) ? p.imgs[0] : '';
             const inCart = cart.find(x => x.id == p.id);
             const qty = inCart ? inCart.qty : 0;
@@ -1407,7 +1437,7 @@
 
     function editP(id, e) {
         e.stopPropagation();
-        const p = products.find(x => x.id == id);
+        const p = allProducts.find(x => x.id == id);
         document.getElementById('edit-id').value = p.id;
         document.getElementById('p-name').value = p.name;
         document.getElementById('p-price').value = p.price;
@@ -1421,7 +1451,7 @@
     }
 
     function setCat(cat, el) {
-        currentCat = cat; currentSub = "Все";
+        currentCat = cat; currentSub = "Все"; itemsToShow = 10; // Сброс пагинации
         const pcSub = document.getElementById('pc-sub-nav');
         const subs = subCatsMap[cat] || [];
         if(subs.length > 0) {
@@ -1433,14 +1463,14 @@
     }
 
     function setSub(sub, el) {
-        currentSub = sub;
+        currentSub = sub; itemsToShow = 10; // Сброс пагинации
         document.querySelectorAll('.sub-link').forEach(l => l.classList.remove('active'));
         el.classList.add('active');
         render();
     }
 
     function openP(id) {
-        const p = products.find(x => x.id == id);
+        const p = allProducts.find(x => x.id == id);
         const isPremium = currentUser && currentUser.premium;
         
         let dPrice, oldPHtml = '';
@@ -1472,7 +1502,7 @@
     }
 
     function buy(id) { 
-        const product = products.find(x => x.id == id);
+        const product = allProducts.find(x => x.id == id);
         const existing = cart.find(x => x.id == id);
         if(existing) existing.qty++;
         else cart.push({...product, qty: 1}); 
@@ -1583,8 +1613,12 @@
 
     function completeRegistration() {
         const name = document.getElementById('reg-name').value, pass = document.getElementById('reg-pass').value;
-        if(!name || !pass) return alert("Заполните поля!");
-        const userData = { phone: "+" + window.tempPhone, name, pass, avatar: regAvatarBase64, premium: false };
+        const d = document.getElementById('reg-day').value, m = document.getElementById('reg-month').value, y = document.getElementById('reg-year').value;
+        if(!name || !pass || !d || !m || !y) return alert("Заполните все поля!");
+        
+        const bday = `${d}.${m}.${y}`;
+        const userData = { phone: "+" + window.tempPhone, name, pass, avatar: regAvatarBase64, premium: false, bday: bday };
+        
         db.ref('users/' + window.tempPhone).set(userData).then(() => {
             document.getElementById('reg-details-overlay').style.display = 'none';
             playWelcomeAnim(name, false); currentUser = userData;
@@ -1674,12 +1708,23 @@
     function logout() { localStorage.removeItem('tajkomp_user'); location.reload(); }
     function deleteAccount() { if(confirm("Удалить?")) db.ref('users/' + currentUser.phone.replace('+', '')).remove().then(logout); }
 
+    // --- ФУНКЦИЯ АДМИНА: Список клиентов со всеми данными ---
     function openAdminUsers() {
         db.ref('users').once('value', snap => {
             const users = snap.val(), list = document.getElementById('admin-users-list'); list.innerHTML = "";
             for(let id in users) {
                 const u = users[id];
-                list.innerHTML += `<div class="user-list-item"><img src="${u.avatar || ''}" class="user-avatar-list"><div style="flex:1"><b>${u.name}</b><br>${u.phone}</div><i class="fas fa-crown" onclick="toggleUserPremium('${id}')" style="color:${u.premium?'gold':'#ccc'}"></i></div>`;
+                list.innerHTML += `
+                <div class="user-list-item">
+                    <img src="${u.avatar || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="user-avatar-list">
+                    <div style="flex:1; font-size:0.85rem;">
+                        <b>${u.name}</b><br>
+                        📞 ${u.phone}<br>
+                        🔑 Пароль: <span style="color:var(--primary)">${u.pass}</span><br>
+                        🎂 Рождение: ${u.bday || 'Не указано'}
+                    </div>
+                    <i class="fas fa-crown" onclick="toggleUserPremium('${id}')" style="color:${u.premium?'gold':'#ccc'}; cursor:pointer; font-size:1.5rem;"></i>
+                </div>`;
             }
             document.getElementById('admin-users-overlay').style.display = 'flex';
         });
@@ -1713,8 +1758,8 @@
     // --- ЛОГИКА ПРИВЛЕКАТЕЛЬНЫХ УВЕДОМЛЕНИЙ ---
     function sendProductNotification() {
         if (Notification.permission !== "granted") return;
-        if (products.length === 0) return;
-        const randomProduct = products[Math.floor(Math.random() * products.length)];
+        if (allProducts.length === 0) return;
+        const randomProduct = allProducts[Math.floor(Math.random() * allProducts.length)];
         const messages = [
             `🔥 Хит продаж: ${randomProduct.name}!`,
             `✨ Посмотрите на это: ${randomProduct.name} уже в наличии!`,
