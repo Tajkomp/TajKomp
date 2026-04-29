@@ -67,6 +67,7 @@
             border-radius: 12px;
             font-weight: 800;
             font-size: 0.7rem;
+            font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -355,17 +356,17 @@
             justify-content: center;
             align-items: center;
         }
-        .promo-slide img { 
+        .promo-slide img, .promo-slide video { 
             width: 100%; 
             height: 100%; 
-            object-fit: contain; /* ФОТО ПОМЕЩАЕТСЯ ПОЛНОСТЬЮ БЕЗ ОБРЕЗКИ */
+            object-fit: contain; /* ФОТО/ВИДЕО ПОМЕЩАЕТСЯ ПОЛНОСТЬЮ БЕЗ ОБРЕЗКИ */
         }
 
         @media (max-width: 16.5cm) {
             .promo-slider-container {
                 width: 95%; /* На маленьких экранах банер занимает почти всю ширину */
                 height: auto;
-                aspect-ratio: 16 / 6; /* Сохраняет пропорции 16:4 */
+                aspect-ratio: 16 / 6; /* Сохраняет пропорции 16:6 */
             }
         }
 
@@ -773,10 +774,10 @@
         <h2 style="color:var(--primary); margin-bottom:15px;">Управление рекламой</h2>
         <div id="admin-promo-list" style="margin-bottom:20px;"></div>
         <hr style="margin-bottom:15px; opacity:0.2;">
-        <h4>Добавить баннер</h4>
+        <h4>Добавить баннер (Фото или Видео)</h4>
         <input type="text" id="promo-link" class="admin-input" placeholder="Ссылка (необязательно)">
-        <label class="file-label" for="promo-file"><i class="fas fa-image"></i> Выбрать баннер</label>
-        <input type="file" id="promo-file" accept="image/*" style="display:none;" onchange="uploadPromoBanner(this.files)">
+        <label class="file-label" for="promo-file"><i class="fas fa-file-upload"></i> Выбрать файл (Фото/Видео)</label>
+        <input type="file" id="promo-file" accept="image/*,video/*" style="display:none;" onchange="uploadPromoBanner(this.files)">
     </div>
 </div>
 
@@ -796,7 +797,7 @@
             <h4 style="margin-bottom:10px;">Редактор каталогов</h4>
             <p style="font-size: 0.7rem; margin-bottom: 5px; opacity: 0.7;">1. Управление основными:</p>
             <div id="main-cat-list-edit" class="cat-manager-list" style="margin-bottom:15px;"></div>
-            <div style="display:flex; gap:5px; margin-bottom:200px;">
+            <div style="display:flex; gap:5px; margin-bottom:20px;">
                 <input type="text" id="new-main-cat-name" placeholder="Новая категория" class="admin-input" style="margin:0; padding:8px; font-size:0.8rem;">
                 <button onclick="addMainCategory()" style="background:var(--primary); color:#fff; border:none; padding:0 15px; border-radius:10px;">+</button>
             </div>
@@ -880,7 +881,7 @@
         <div style="font-size:5rem; color:var(--accent); margin-bottom:20px; filter: drop-shadow(0 0 10px rgba(0,212,255,0.5));"><i class="fas fa-check-circle"></i></div>
         <h2 style="margin-bottom:15px; font-weight:800;">Заказ принят!</h2>
         <p id="success-text" style="line-height:1.6; opacity:0.8;"></p>
-        <button class="btn-buy" onclick="location.reload()" style="background:var(--accent); color:#000; margin-top:25px;">Закрыть</button>
+        <button class="btn-buy" onclick="document.getElementById('success-overlay').style.display='none'" style="background:var(--accent); color:#000; margin-top:25px;">Закрыть</button>
     </div>
 </div>
 
@@ -1140,11 +1141,26 @@
             return;
         }
         container.style.display = 'block';
-        slider.innerHTML = promoBanners.map(b => `
-            <div class="promo-slide" onclick="if('${b.link}') window.open('${b.link}', '_blank')">
-                <img src="${b.img}">
-            </div>
-        `).join('');
+        
+        slider.innerHTML = promoBanners.map(b => {
+            // Проверяем, является ли файл видео (на основе строки base64 или ссылки)
+            const isVideo = b.img.includes('data:video/') || b.img.endsWith('.mp4') || b.img.endsWith('.webm');
+            
+            if(isVideo) {
+                return `
+                    <div class="promo-slide" onclick="if('${b.link}') window.open('${b.link}', '_blank')">
+                        <video src="${b.img}" autoplay muted loop playsinline></video>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="promo-slide" onclick="if('${b.link}') window.open('${b.link}', '_blank')">
+                        <img src="${b.img}">
+                    </div>
+                `;
+            }
+        }).join('');
+        
         startSlider();
     }
 
@@ -1164,25 +1180,38 @@
     function uploadPromoBanner(files) {
         const reader = new FileReader();
         const link = document.getElementById('promo-link').value;
+        const file = files[0];
+        
         reader.onload = (e) => {
             const id = Date.now();
-            db.ref('promo/' + id).set({ id, img: e.target.result, link }).then(() => {
+            const dataUrl = e.target.result;
+            
+            // Если видео, мы сохраняем как есть (base64)
+            // Примечание: Для больших видео Firebase Realtime DB может иметь лимиты на размер строки
+            db.ref('promo/' + id).set({ id, img: dataUrl, link }).then(() => {
                 document.getElementById('promo-link').value = "";
                 loadAdminPromoList();
             });
         };
-        reader.readAsDataURL(files[0]);
+        reader.readAsDataURL(file);
     }
 
     function loadAdminPromoList() {
         const list = document.getElementById('admin-promo-list');
-        list.innerHTML = promoBanners.map(b => `
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;">
-                <img src="${b.img}" style="width:100px; height:50px; object-fit:cover; border-radius:5px;">
-                <div style="flex:1; font-size:0.7rem; overflow:hidden;">${b.link || 'Нет ссылки'}</div>
-                <i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="deletePromo('${b.id}')"></i>
-            </div>
-        `).join('') || '<p style="opacity:0.5; text-align:center;">Нет активной рекламы</p>';
+        list.innerHTML = promoBanners.map(b => {
+            const isVideo = b.img.includes('data:video/') || b.img.endsWith('.mp4') || b.img.endsWith('.webm');
+            const preview = isVideo ? 
+                `<video src="${b.img}" style="width:100px; height:50px; object-fit:cover; border-radius:5px;"></video>` :
+                `<img src="${b.img}" style="width:100px; height:50px; object-fit:cover; border-radius:5px;">`;
+                
+            return `
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;">
+                    ${preview}
+                    <div style="flex:1; font-size:0.7rem; overflow:hidden;">${b.link || 'Нет ссылки'}</div>
+                    <i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="deletePromo('${b.id}')"></i>
+                </div>
+            `;
+        }).join('') || '<p style="opacity:0.5; text-align:center;">Нет активной рекламы</p>';
     }
 
     function deletePromo(id) {
@@ -1415,7 +1444,7 @@
                     <button class="admin-btn-card" onclick="deleteP(${p.id}, event)" style="background:#e74c3c"><i class="fas fa-trash"></i></button>
                 </div>
                 ${p.oldPrice ? '<div class="promo-badge">АКЦИЯ</div>' : ''}
-                ${isPremium ? '<div class="premium-sticker">-5%</div>' : ''}
+                ${isPremium ? '<div class="premium-sticker">-10%</div>' : ''}
                 <div class="p-img-container"><img src="${imageSrc}" loading="lazy"></div>
                 <div class="p-info">
                     <h3>${p.name}</h3>
@@ -1552,10 +1581,16 @@
             }
             await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({chat_id: chatId, text: msg}) });
             db.ref('orders/' + currentUser.phone.replace('+', '')).push({ date: new Date().toLocaleString(), total: document.getElementById('cart-total').innerText, items: list, payType });
-            document.getElementById('order-overlay').style.display = 'none';
+            
+            // ЛОГИКА ПОСЛЕ УСПЕШНОГО ЗАКАЗА
+            document.getElementById('order-overlay').style.display = 'none'; // Закрываем форму заказа
             document.getElementById('success-text').innerHTML = `Спасибо, <b>${name}</b>!<br><br>Заказ принят.`;
-            document.getElementById('success-overlay').style.display = 'flex';
-            cart = []; updateCartUI(); render();
+            document.getElementById('success-overlay').style.display = 'flex'; // Показываем окно успеха
+            
+            cart = []; // Очищаем корзину
+            updateCartUI(); // Обновляем UI корзины (обнуляем счетчики)
+            render(); // Перерисовываем товары (чтобы кнопки "Добавлено" сменились на "В корзину")
+            
         } catch(e) { alert("Ошибка!"); }
     }
 
