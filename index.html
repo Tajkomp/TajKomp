@@ -1901,7 +1901,6 @@
         document.getElementById('lockout-overlay').style.display = 'none';
         document.getElementById('login-pass-overlay').style.display = 'flex';
     }
-</script>
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 const auth = getAuth();
@@ -1941,5 +1940,6 @@ window.verifyCode = function() {
     alert("Неверный код или срок его действия истек");
   });
 }
+</script>
 </body>
 </html>
