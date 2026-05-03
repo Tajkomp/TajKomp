@@ -669,15 +669,29 @@
     </div>
 </div>
 
+<!-- Строка 672: Начало вставки -->
 <div id="auth-overlay" class="overlay">
     <div class="modal-content" style="text-align:center;">
         <span class="close-btn" onclick="document.getElementById('auth-overlay').style.display='none'">&times;</span>
-        <h2 id="auth-title" style="color:var(--primary); margin-bottom:20px;">Вход</h2>
+        <h2 id="auth-title" style="color:var(--primary); margin-bottom:20px;">Регистрация</h2>
         <div class="phone-prefix-container">
             <span class="phone-prefix">+992</span>
             <input type="number" id="auth-phone" class="admin-input phone-input" placeholder="Введите номер">
         </div>
-        <button id="auth-action-btn" class="btn-buy" onclick="checkUserByPhone()">Продолжить</button>
+        <!-- Контейнер для невидимой капчи -->
+        <div id="recaptcha-container"></div>
+        <button id="auth-action-btn" class="btn-buy" onclick="sendSmsVerification()">Получить код по SMS</button>
+    </div>
+</div>
+
+<!-- НОВОЕ: Окно ввода кода из СМС -->
+<div id="sms-confirm-overlay" class="overlay">
+    <div class="modal-content" style="text-align:center;">
+        <span class="close-btn" onclick="document.getElementById('sms-confirm-overlay').style.display='none'">&times;</span>
+        <h2 style="color:var(--primary); margin-bottom:20px;">Подтверждение</h2>
+        <p style="margin-bottom: 15px; font-size: 0.9rem;">Введите 6 цифр из СМС</p>
+        <input type="number" id="sms-code-input" class="admin-input" placeholder="000000" style="text-align: center; letter-spacing: 5px; font-size: 1.5rem;">
+        <button class="btn-buy" onclick="verifySmsCode()">Подтвердить и войти</button>
     </div>
 </div>
 
