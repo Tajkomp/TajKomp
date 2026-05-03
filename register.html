@@ -1,0 +1,10 @@
+<!-- Контейнер для капчи (можно сделать невидимым) -->
+<div id="recaptcha-container"></div>
+
+<!-- Поле для ввода телефона и кнопка -->
+<input type="text" id="phone-number" placeholder="+992XXXXXXXXX">
+<button onclick="sendSmsCode()">Получить код</button>
+
+<!-- Поле для ввода кода из СМС -->
+<input type="text" id="verification-code" placeholder="Код из СМС">
+<button onclick="verifyCode()">Подтвердить код</button>
