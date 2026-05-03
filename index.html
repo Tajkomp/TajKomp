@@ -1888,5 +1888,44 @@
         document.getElementById('login-pass-overlay').style.display = 'flex';
     }
 </script>
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+
+const auth = getAuth();
+
+// 1. Инициализация капчи
+window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+  'size': 'invisible', // Капча будет срабатывать автоматически
+  'callback': (response) => {
+    // reCAPTCHA решена
+  }
+});
+
+// 2. Функция отправки СМС
+window.sendSmsCode = function() {
+  const phoneNumber = document.getElementById('phone-number').value;
+  const appVerifier = window.recaptchaVerifier;
+
+  signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+    .then((confirmationResult) => {
+      // СМС отправлено. Сохраняем результат, чтобы проверить код позже
+      window.confirmationResult = confirmationResult;
+      alert("Код отправлен на ваш номер!");
+    }).catch((error) => {
+      console.error("Ошибка при отправке СМС:", error);
+      alert("Ошибка: " + error.message);
+    });
+}
+
+// 3. Функция проверки введенного кода
+window.verifyCode = function() {
+  const code = document.getElementById('verification-code').value;
+  window.confirmationResult.confirm(code).then((result) => {
+    const user = result.user;
+    alert("Регистрация успешна! Добро пожаловать в TajKomp");
+    // Здесь можно перенаправить пользователя в личный кабинет
+  }).catch((error) => {
+    alert("Неверный код или срок его действия истек");
+  });
+}
 </body>
 </html>
