@@ -1330,12 +1330,52 @@
     function openAdminModal() { document.getElementById('admin-overlay').style.display = 'flex'; }
     function closeAdmin() { document.getElementById('admin-overlay').style.display = 'none'; resetAdminForm(); }
 
-    function saveProduct() {
-        const id = document.getElementById('edit-id').value || Date.now();
-        if(currentImgsArray.length === 0) return alert("Выберите хотя бы одно фото!");
-        const pData = { id, name: document.getElementById('p-name').value, price: document.getElementById('p-price').value, oldPrice: document.getElementById('p-old-price').value, cat: document.getElementById('p-cat').value, desc: document.getElementById('p-desc').value, imgs: currentImgsArray };
-        db.ref('products/' + id).set(pData).then(() => closeAdmin());
+ function saveProduct() {
+    // 1. Получаем ID или создаем новый, если это добавление, а не редактирование
+    let id = document.getElementById('edit-id').value;
+    if (!id) {
+        id = Date.now().toString(); 
     }
+
+    // 2. Сбор данных из полей
+    const name = document.getElementById('p-name').value;
+    const price = document.getElementById('p-price').value;
+    const oldPrice = document.getElementById('p-old-price').value;
+    const cat = document.getElementById('p-cat').value;
+    const desc = document.getElementById('p-desc').value;
+
+    // 3. Проверки
+    if (!name || !price) {
+        return alert("Пожалуйста, заполните название и цену!");
+    }
+    if (currentImgsArray.length === 0) {
+        return alert("Нужно добавить хотя бы одно фото!");
+    }
+
+    const pData = {
+        id: id,
+        name: name,
+        price: price,
+        oldPrice: oldPrice || "",
+        cat: cat,
+        desc: desc,
+        imgs: currentImgsArray
+    };
+
+    console.log("Сохраняем товар:", pData);
+
+    // 4. Запись в базу данных
+    db.ref('products/' + id).set(pData)
+        .then(() => {
+            console.log("Успешно сохранено в Firebase!");
+            closeAdmin();
+            alert("Товар успешно опубликован!");
+        })
+        .catch((error) => {
+            console.error("Ошибка Firebase:", error);
+            alert("Ошибка сохранения: " + error.message);
+        });
+}
 
     function toggleFav(id, e) {
         if(e) e.stopPropagation();
