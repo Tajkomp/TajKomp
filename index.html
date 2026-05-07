@@ -67,6 +67,7 @@
             border-radius: 12px;
             font-weight: 800;
             font-size: 0.7rem;
+            font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -610,7 +611,7 @@
         <h3 class="gold-text" style="font-size:1.2rem; margin: 10px 0;">29,99 TJS на 3 месяца</h3>
         <div style="text-align:left; margin: 20px 0; font-size: 0.9rem; line-height:1.6;">
             <p>🌟 <b>Кредит до 300с:</b> Только по паспорту!</p>
-            <p>🌟 <b>Скидки:</b> До -5% на все товары!</p>
+            <p>🌟 <b>Скидки:</b> До -10% на все товары!</p>
             <p>🌟 <b>Доставка:</b> Бесплатно по городу!</p>
             <p>🌟 <b>Подарки:</b> Отправка сюрприз подарков!</p>
         </div>
@@ -671,7 +672,7 @@
 <div id="auth-overlay" class="overlay">
     <div class="modal-content" style="text-align:center;">
         <span class="close-btn" onclick="document.getElementById('auth-overlay').style.display='none'">&times;</span>
-        <h2 id="auth-title" style="color:var(--primary); margin-bottom:20px;">Вход / Регистрация</h2>
+        <h2 id="auth-title" style="color:var(--primary); margin-bottom:20px;">Вход</h2>
         <div class="phone-prefix-container">
             <span class="phone-prefix">+992</span>
             <input type="number" id="auth-phone" class="admin-input phone-input" placeholder="Введите номер">
@@ -683,7 +684,7 @@
 <div id="reg-details-overlay" class="overlay">
     <div class="modal-content">
         <span class="close-btn" onclick="document.getElementById('reg-details-overlay').style.display='none'">&times;</span>
-        <h2 style="color:var(--primary); margin-bottom:20px;">Регистрация</h2>
+        <h2 id="auth-title" style="color:var(--primary); margin-bottom:20px;">Регистрация</h2>
         <input type="text" id="reg-name" class="admin-input" placeholder="Ваше имя">
         <div style="display:flex; gap:10px;">
             <input type="number" id="reg-day" class="admin-input" placeholder="День">
@@ -953,9 +954,9 @@
     const botToken = '8681756976:AAHIRkRSGduktZCfUeChoABowJ6VH8cwVlg';
     const chatId = '8506743201';
 
-    let allProducts = []; 
-    let products = [];    
-    let itemsToShow = 10; 
+    let allProducts = []; // Все товары из БД
+    let products = [];    // Видимые товары
+    let itemsToShow = 10; // Сколько показывать изначально
     let categories = ["Ноутбуки", "Сборка ПК", "Принтеры", "Телефон", "Монитор", "Наушник", "Wi-Fi Роутер", "Повербанк", "SSD и HDD", "Аксессуары", "Клавиатура и Мышка", "Моноблоки"];
     
     let subCatsMap = {
@@ -976,9 +977,9 @@
     let favorites = JSON.parse(localStorage.getItem('tajkomp_favs')) || [];
 
     let currentUser = JSON.parse(localStorage.getItem('tajkomp_user')) || null;
-    let failedAttempts = 0;
+    let loginAttempts = 0;
     let regAvatarBase64 = "";
-    let editAvatarBase64 = ""; 
+    let editAvatarBase64 = ""; // Для редактирования
     let authMode = "login"; 
 
     // Premium Переменные
@@ -1016,6 +1017,7 @@
         renderPromoSlider();
     });
 
+    // Функция сжатия изображений
     async function compressImage(base64Str, maxWidth = 800) {
         return new Promise((resolve) => {
             const img = new Image();
@@ -1037,9 +1039,11 @@
         });
     }
 
+    // Premium Функции
     function openPremiumModal() {
         if(!currentUser) { openAuth(); return; }
         if(currentUser.premium) {
+            // Показать инфо об активном премиуме
             const start = currentUser.premDate || "Неизвестно";
             const end = currentUser.premEndDate || "Неизвестно";
             document.getElementById('prem-start-date').innerText = "Дата активации: " + start;
@@ -1139,13 +1143,24 @@
         container.style.display = 'block';
         
         slider.innerHTML = promoBanners.map(b => {
+            // Проверяем, является ли файл видео (на основе строки base64 или ссылки)
             const isVideo = b.img.includes('data:video/') || b.img.endsWith('.mp4') || b.img.endsWith('.webm');
+            
             if(isVideo) {
-                return `<div class="promo-slide" onclick="if('${b.link}') window.open('${b.link}', '_blank')"><video src="${b.img}" autoplay muted loop playsinline></video></div>`;
+                return `
+                    <div class="promo-slide" onclick="if('${b.link}') window.open('${b.link}', '_blank')">
+                        <video src="${b.img}" autoplay muted loop playsinline></video>
+                    </div>
+                `;
             } else {
-                return `<div class="promo-slide" onclick="if('${b.link}') window.open('${b.link}', '_blank')"><img src="${b.img}"></div>`;
+                return `
+                    <div class="promo-slide" onclick="if('${b.link}') window.open('${b.link}', '_blank')">
+                        <img src="${b.img}">
+                    </div>
+                `;
             }
         }).join('');
+        
         startSlider();
     }
 
@@ -1166,9 +1181,13 @@
         const reader = new FileReader();
         const link = document.getElementById('promo-link').value;
         const file = files[0];
+        
         reader.onload = (e) => {
             const id = Date.now();
             const dataUrl = e.target.result;
+            
+            // Если видео, мы сохраняем как есть (base64)
+            // Примечание: Для больших видео Firebase Realtime DB может иметь лимиты на размер строки
             db.ref('promo/' + id).set({ id, img: dataUrl, link }).then(() => {
                 document.getElementById('promo-link').value = "";
                 loadAdminPromoList();
@@ -1181,8 +1200,17 @@
         const list = document.getElementById('admin-promo-list');
         list.innerHTML = promoBanners.map(b => {
             const isVideo = b.img.includes('data:video/') || b.img.endsWith('.mp4') || b.img.endsWith('.webm');
-            const preview = isVideo ? `<video src="${b.img}" style="width:100px; height:50px; object-fit:cover; border-radius:5px;"></video>` : `<img src="${b.img}" style="width:100px; height:50px; object-fit:cover; border-radius:5px;">`;
-            return `<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;">${preview}<div style="flex:1; font-size:0.7rem; overflow:hidden;">${b.link || 'Нет ссылки'}</div><i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="deletePromo('${b.id}')"></i></div>`;
+            const preview = isVideo ? 
+                `<video src="${b.img}" style="width:100px; height:50px; object-fit:cover; border-radius:5px;"></video>` :
+                `<img src="${b.img}" style="width:100px; height:50px; object-fit:cover; border-radius:5px;">`;
+                
+            return `
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;">
+                    ${preview}
+                    <div style="flex:1; font-size:0.7rem; overflow:hidden;">${b.link || 'Нет ссылки'}</div>
+                    <i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="deletePromo('${b.id}')"></i>
+                </div>
+            `;
         }).join('') || '<p style="opacity:0.5; text-align:center;">Нет активной рекламы</p>';
     }
 
@@ -1197,7 +1225,10 @@
         categories.forEach(c => {
             const subs = subCatsMap[c] || [];
             if (subs.length > 0) {
-                optionsHtml += `<optgroup label="${c}"><option value="${c}">${c} (Основная)</option>${subs.map(s => `<option value="${s}">${s}</option>`).join('')}</optgroup>`;
+                optionsHtml += `<optgroup label="${c}">`;
+                optionsHtml += `<option value="${c}">${c} (Основная)</option>`;
+                subs.forEach(s => optionsHtml += `<option value="${s}">${s}</option>`);
+                optionsHtml += `</optgroup>`;
             } else {
                 optionsHtml += `<option value="${c}">${c}</option>`;
             }
@@ -1212,7 +1243,8 @@
         }
         const sideList = document.getElementById('sidebar-cat-list');
         if(sideList) {
-            sideList.innerHTML = `<div class="cat-item-side ${currentCat==='Все'?'active':''}" onclick="setCat('Все', this); toggleSidebar()">🏠 Все товары</div>` + categories.map(c => `<div class="cat-item-side ${currentCat===c?'active':''}" onclick="setCat('${c}', this); toggleSidebar()">${c} <i class="fas fa-chevron-right" style="font-size:0.7rem; opacity:0.5"></i></div>`).join('');
+            sideList.innerHTML = `<div class="cat-item-side ${currentCat==='Все'?'active':''}" onclick="setCat('Все', this); toggleSidebar()">🏠 Все товары</div>` + 
+                categories.map(c => `<div class="cat-item-side ${currentCat===c?'active':''}" onclick="setCat('${c}', this); toggleSidebar()">${c} <i class="fas fa-chevron-right" style="font-size:0.7rem; opacity:0.5"></i></div>`).join('');
         }
     }
 
@@ -1284,15 +1316,20 @@
         });
     }
 
+    // ЛОГИКА ЗАГРУЗКИ: Получаем все товары, но в массив products кладем по частям
     db.ref('products').on('value', (snapshot) => {
         const data = snapshot.val();
         allProducts = data ? Object.values(data) : [];
+        
+        // --- ФУНКЦИЯ MIX: Перемешивание товаров ---
         allProducts = allProducts.sort(() => Math.random() - 0.5);
-        itemsToShow = 10;
+
+        itemsToShow = 10; // Сброс при обновлении БД
         document.getElementById('loader').style.display = 'none';
         render();
     });
 
+    // ЛОГИКА INFINITE SCROLL: Догрузка при покрутке
     window.onscroll = function() {
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
             if(itemsToShow < allProducts.length) {
@@ -1330,52 +1367,16 @@
     function openAdminModal() { document.getElementById('admin-overlay').style.display = 'flex'; }
     function closeAdmin() { document.getElementById('admin-overlay').style.display = 'none'; resetAdminForm(); }
 
- function saveProduct() {
-    // 1. Получаем ID или создаем новый, если это добавление, а не редактирование
-    let id = document.getElementById('edit-id').value;
-    if (!id) {
-        id = Date.now().toString(); 
+    function saveProduct() {
+        const id = document.getElementById('edit-id').value || Date.now();
+        if(currentImgsArray.length === 0) return alert("Выберите хотя бы одно фото!");
+        const pData = {
+            id, name: document.getElementById('p-name').value, price: document.getElementById('p-price').value,
+            oldPrice: document.getElementById('p-old-price').value, cat: document.getElementById('p-cat').value,
+            desc: document.getElementById('p-desc').value, imgs: currentImgsArray
+        };
+        db.ref('products/' + id).set(pData).then(() => closeAdmin());
     }
-
-    // 2. Сбор данных из полей
-    const name = document.getElementById('p-name').value;
-    const price = document.getElementById('p-price').value;
-    const oldPrice = document.getElementById('p-old-price').value;
-    const cat = document.getElementById('p-cat').value;
-    const desc = document.getElementById('p-desc').value;
-
-    // 3. Проверки
-    if (!name || !price) {
-        return alert("Пожалуйста, заполните название и цену!");
-    }
-    if (currentImgsArray.length === 0) {
-        return alert("Нужно добавить хотя бы одно фото!");
-    }
-
-    const pData = {
-        id: id,
-        name: name,
-        price: price,
-        oldPrice: oldPrice || "",
-        cat: cat,
-        desc: desc,
-        imgs: currentImgsArray
-    };
-
-    console.log("Сохраняем товар:", pData);
-
-    // 4. Запись в базу данных
-    db.ref('products/' + id).set(pData)
-        .then(() => {
-            console.log("Успешно сохранено в Firebase!");
-            closeAdmin();
-            alert("Товар успешно опубликован!");
-        })
-        .catch((error) => {
-            console.error("Ошибка Firebase:", error);
-            alert("Ошибка сохранения: " + error.message);
-        });
-}
 
     function toggleFav(id, e) {
         if(e) e.stopPropagation();
@@ -1397,6 +1398,8 @@
         const grid = document.getElementById('main-grid');
         const search = document.getElementById('smart-search').value.toLowerCase();
         const isPremium = currentUser && currentUser.premium;
+
+        // Фильтрация
         let filtered = allProducts.filter(p => {
             if(favFilterActive && !favorites.includes(p.id)) return false;
             let match = currentCat === "Все";
@@ -1407,14 +1410,58 @@
             }
             return match && (p.name.toLowerCase().includes(search) || (p.desc && p.desc.toLowerCase().includes(search)));
         });
+
+        // ПАГИНАЦИЯ: Ограничиваем количество отрисованных товаров
         const paginatedProducts = filtered.slice(0, itemsToShow);
+
         grid.innerHTML = paginatedProducts.map(p => {
             const imageSrc = (p.imgs && p.imgs.length > 0) ? p.imgs[0] : '';
             const inCart = cart.find(x => x.id == p.id);
             const qty = inCart ? inCart.qty : 0;
             const isFav = favorites.includes(p.id);
-            let priceHtml = isPremium ? `<span class="price-new">${Math.round(p.price * 0.9)} с.</span><span class="price-old">${p.price} с.</span>` : `<span class="price-new">${p.price} с.</span>${p.oldPrice ? `<span class="price-old">${p.oldPrice} с.</span>` : ''}`;
-            return `<div class="product-card" onclick="openP(${p.id})"><button class="fav-card-btn ${isFav?'active':''}" onclick="toggleFav(${p.id}, event)"><i class="${isFav?'fas':'far'} fa-heart"></i></button><div class="admin-controls" style="display:${isAdmin?'flex':'none'}"><button class="admin-btn-card" onclick="editP(${p.id}, event)" style="background:#2ecc71"><i class="fas fa-edit"></i></button><button class="admin-btn-card" onclick="deleteP(${p.id}, event)" style="background:#e74c3c"><i class="fas fa-trash"></i></button></div>${p.oldPrice ? '<div class="promo-badge">АКЦИЯ</div>' : ''}${isPremium ? '<div class="premium-sticker">-5%</div>' : ''}<div class="p-img-container"><img src="${imageSrc}" loading="lazy"></div><div class="p-info"><h3>${p.name}</h3><div class="price-box">${priceHtml}</div>${qty > 0 ? `<button class="btn-buy btn-added" onclick="event.stopPropagation()">Добавлено</button><div class="qty-controls" onclick="event.stopPropagation()"><button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button></div>` : `<button class="btn-buy" style="margin-top:15px; padding:10px; font-size:0.8rem;" onclick="event.stopPropagation(); buy(${p.id})">В корзину</button>`}</div></div>`;
+            
+            let priceHtml = '';
+            if(isPremium) {
+                const premiumPrice = Math.round(p.price * 0.9);
+                priceHtml = `
+                    <span class="price-new">${premiumPrice} с.</span>
+                    <span class="price-old">${p.price} с.</span>
+                `;
+            } else {
+                priceHtml = `
+                    <span class="price-new">${p.price} с.</span>
+                    ${p.oldPrice ? `<span class="price-old">${p.oldPrice} с.</span>` : ''}
+                `;
+            }
+
+            return `
+            <div class="product-card" onclick="openP(${p.id})">
+                <button class="fav-card-btn ${isFav?'active':''}" onclick="toggleFav(${p.id}, event)">
+                    <i class="${isFav?'fas':'far'} fa-heart"></i>
+                </button>
+                <div class="admin-controls" style="display:${isAdmin?'flex':'none'}">
+                    <button class="admin-btn-card" onclick="editP(${p.id}, event)" style="background:#2ecc71"><i class="fas fa-edit"></i></button>
+                    <button class="admin-btn-card" onclick="deleteP(${p.id}, event)" style="background:#e74c3c"><i class="fas fa-trash"></i></button>
+                </div>
+                ${p.oldPrice ? '<div class="promo-badge">АКЦИЯ</div>' : ''}
+                ${isPremium ? '<div class="premium-sticker">-10%</div>' : ''}
+                <div class="p-img-container"><img src="${imageSrc}" loading="lazy"></div>
+                <div class="p-info">
+                    <h3>${p.name}</h3>
+                    <div class="price-box">
+                        ${priceHtml}
+                    </div>
+                    ${qty > 0 ? 
+                        `<button class="btn-buy btn-added" onclick="event.stopPropagation()">Добавлено</button>
+                         <div class="qty-controls" onclick="event.stopPropagation()">
+                            <button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button>
+                            <span class="qty-num">${qty}</span>
+                            <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
+                         </div>` : 
+                        `<button class="btn-buy" style="margin-top:15px; padding:10px; font-size:0.8rem;" onclick="event.stopPropagation(); buy(${p.id})">В корзину</button>`
+                    }
+                </div>
+            </div>`;
         }).join('');
     }
 
@@ -1434,18 +1481,19 @@
     }
 
     function setCat(cat, el) {
-        currentCat = cat; currentSub = "Все"; itemsToShow = 10;
+        currentCat = cat; currentSub = "Все"; itemsToShow = 10; // Сброс пагинации
         const pcSub = document.getElementById('pc-sub-nav');
         const subs = subCatsMap[cat] || [];
         if(subs.length > 0) {
             pcSub.style.display = 'flex';
-            pcSub.innerHTML = `<div class="sub-link active" onclick="setSub('Все', this)">Все ${cat}</div>` + subs.map(s => `<div class="sub-link" onclick="setSub('${s}', this)">${s}</div>`).join('');
+            pcSub.innerHTML = `<div class="sub-link active" onclick="setSub('Все', this)">Все ${cat}</div>` + 
+                subs.map(s => `<div class="sub-link" onclick="setSub('${s}', this)">${s}</div>`).join('');
         } else pcSub.style.display = 'none';
         render();
     }
 
     function setSub(sub, el) {
-        currentSub = sub; itemsToShow = 10;
+        currentSub = sub; itemsToShow = 10; // Сброс пагинации
         document.querySelectorAll('.sub-link').forEach(l => l.classList.remove('active'));
         el.classList.add('active');
         render();
@@ -1454,8 +1502,16 @@
     function openP(id) {
         const p = allProducts.find(x => x.id == id);
         const isPremium = currentUser && currentUser.premium;
-        let dPrice = isPremium ? Math.round(p.price * 0.9) : p.price;
-        let oldPHtml = isPremium ? p.price + " смн" : (p.oldPrice ? p.oldPrice + " смн" : "");
+        
+        let dPrice, oldPHtml = '';
+        if(isPremium) {
+            dPrice = Math.round(p.price * 0.9);
+            oldPHtml = p.price + " смн";
+        } else {
+            dPrice = p.price;
+            oldPHtml = p.oldPrice ? p.oldPrice + " смн" : "";
+        }
+
         document.getElementById('m-gallery').innerHTML = (p.imgs || []).map(s => `<img src="${s}" style="height:250px; border-radius:15px; border: 1px solid rgba(0,122,255,0.1);">`).join('');
         document.getElementById('m-title').innerText = p.name;
         document.getElementById('m-price').innerText = dPrice + " смн";
@@ -1525,10 +1581,16 @@
             }
             await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({chat_id: chatId, text: msg}) });
             db.ref('orders/' + currentUser.phone.replace('+', '')).push({ date: new Date().toLocaleString(), total: document.getElementById('cart-total').innerText, items: list, payType });
-            document.getElementById('order-overlay').style.display = 'none'; 
+            
+            // ЛОГИКА ПОСЛЕ УСПЕШНОГО ЗАКАЗА
+            document.getElementById('order-overlay').style.display = 'none'; // Закрываем форму заказа
             document.getElementById('success-text').innerHTML = `Спасибо, <b>${name}</b>!<br><br>Заказ принят.`;
-            document.getElementById('success-overlay').style.display = 'flex'; 
-            cart = []; updateCartUI(); render();
+            document.getElementById('success-overlay').style.display = 'flex'; // Показываем окно успеха
+            
+            cart = []; // Очищаем корзину
+            updateCartUI(); // Обновляем UI корзины (обнуляем счетчики)
+            render(); // Перерисовываем товары (чтобы кнопки "Добавлено" сменились на "В корзину")
+            
         } catch(e) { alert("Ошибка!"); }
     }
 
@@ -1538,7 +1600,11 @@
         document.getElementById('cart-items').innerHTML = cart.map((item, idx) => {
             let itemPrice = isPremium ? Math.round(item.price * 0.9) : item.price;
             totalCount += item.qty; totalPrice += (Number(itemPrice) * item.qty);
-            return `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:rgba(0,122,255,0.05); padding:15px; border-radius:15px;"><div style="font-size:0.8rem; font-weight:600; flex:1;">${item.name} (x${item.qty})</div><div style="font-weight:800; color:var(--primary); margin-right:10px;">${itemPrice * item.qty} с.</div><i class="fas fa-trash-alt" style="color:#ff4444; cursor:pointer;" onclick="cart.splice(${idx},1); updateCartUI(); render();"></i></div>`;
+            return `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:rgba(0,122,255,0.05); padding:15px; border-radius:15px;">
+                <div style="font-size:0.8rem; font-weight:600; flex:1;">${item.name} (x${item.qty})</div>
+                <div style="font-weight:800; color:var(--primary); margin-right:10px;">${itemPrice * item.qty} с.</div>
+                <i class="fas fa-trash-alt" style="color:#ff4444; cursor:pointer;" onclick="cart.splice(${idx},1); updateCartUI(); render();"></i>
+            </div>`;
         }).join('');
         document.getElementById('cart-count').innerText = totalCount;
         document.getElementById('cart-total').innerText = totalPrice;
@@ -1555,25 +1621,19 @@
     }
 
     function openAuth() { if(currentUser) showProfile(); else document.getElementById('auth-choice-overlay').style.display = 'flex'; }
-    function openLoginPhone() { authMode = "login"; document.getElementById('auth-choice-overlay').style.display = 'none'; document.getElementById('auth-overlay').style.display = 'flex'; }
-    function openRegPhone() { authMode = "reg"; document.getElementById('auth-choice-overlay').style.display = 'none'; document.getElementById('auth-overlay').style.display = 'flex'; }
+    function openLoginPhone() { authMode = "login"; document.getElementById('auth-choice-overlay').style.display = 'none'; document.getElementById('auth-title').innerText = "Вход"; document.getElementById('auth-overlay').style.display = 'flex'; }
+    function openRegPhone() { authMode = "reg"; document.getElementById('auth-choice-overlay').style.display = 'none'; document.getElementById('auth-title').innerText = "Регистрация"; document.getElementById('auth-overlay').style.display = 'flex'; }
 
-    // НОВАЯ ФУНКЦИЯ: Проверка номера без СМС
     function checkUserByPhone() {
-        const phoneInput = document.getElementById('auth-phone');
-        const phone = "992" + phoneInput.value;
-        if(phoneInput.value.length < 9) return alert("Введите правильный номер (9 цифр)!");
-        
-        window.tempPhone = phone;
+        const phone = "992" + document.getElementById('auth-phone').value;
+        if(phone.length < 9) return alert("Введите правильный номер!");
         db.ref('users/' + phone).once('value', snap => {
+            if(authMode === "reg" && snap.exists()) return openLoginPhone();
+            if(authMode === "login" && !snap.exists()) return openRegPhone();
+            window.tempPhone = phone;
             document.getElementById('auth-overlay').style.display = 'none';
-            if(snap.exists()){
-                // Пользователь уже есть — вводим пароль
-                document.getElementById('login-pass-overlay').style.display = 'flex';
-            } else {
-                // Пользователя нет — заполняем анкету
-                document.getElementById('reg-details-overlay').style.display = 'flex';
-            }
+            if(authMode === "reg") document.getElementById('reg-details-overlay').style.display = 'flex';
+            else document.getElementById('login-pass-overlay').style.display = 'flex';
         });
     }
 
@@ -1591,7 +1651,10 @@
         const name = document.getElementById('reg-name').value, pass = document.getElementById('reg-pass').value;
         const d = document.getElementById('reg-day').value, m = document.getElementById('reg-month').value, y = document.getElementById('reg-year').value;
         if(!name || !pass || !d || !m || !y) return alert("Заполните все поля!");
-        const userData = { phone: "+" + window.tempPhone, name, pass, avatar: regAvatarBase64, premium: false, bday: `${d}.${m}.${y}` };
+        
+        const bday = `${d}.${m}.${y}`;
+        const userData = { phone: "+" + window.tempPhone, name, pass, avatar: regAvatarBase64, premium: false, bday: bday };
+        
         db.ref('users/' + window.tempPhone).set(userData).then(() => {
             document.getElementById('reg-details-overlay').style.display = 'none';
             playWelcomeAnim(name, false); currentUser = userData;
@@ -1609,13 +1672,7 @@
                 playWelcomeAnim(user.name, true); currentUser = user;
                 localStorage.setItem('tajkomp_user', JSON.stringify(user));
                 updateAuthBtn(); render();
-            } else {
-                failedAttempts++;
-                if (failedAttempts >= 3) {
-                    document.getElementById('login-pass-overlay').style.display = 'none';
-                    document.getElementById('lockout-overlay').style.display = 'flex';
-                } else alert("Неверный пароль!");
-            }
+            } else alert("Неверный пароль!");
         });
     }
 
@@ -1687,12 +1744,23 @@
     function logout() { localStorage.removeItem('tajkomp_user'); location.reload(); }
     function deleteAccount() { if(confirm("Удалить?")) db.ref('users/' + currentUser.phone.replace('+', '')).remove().then(logout); }
 
+    // --- ФУНКЦИЯ АДМИНА: Список клиентов со всеми данными ---
     function openAdminUsers() {
         db.ref('users').once('value', snap => {
             const users = snap.val(), list = document.getElementById('admin-users-list'); list.innerHTML = "";
             for(let id in users) {
                 const u = users[id];
-                list.innerHTML += `<div class="user-list-item"><img src="${u.avatar || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="user-avatar-list"><div style="flex:1; font-size:0.85rem;"><b>${u.name}</b><br>📞 ${u.phone}<br>🔑 Пароль: <span style="color:var(--primary)">${u.pass}</span><br>🎂 Рождение: ${u.bday || 'Не указано'}</div><i class="fas fa-crown" onclick="toggleUserPremium('${id}')" style="color:${u.premium?'gold':'#ccc'}; cursor:pointer; font-size:1.5rem;"></i></div>`;
+                list.innerHTML += `
+                <div class="user-list-item">
+                    <img src="${u.avatar || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="user-avatar-list">
+                    <div style="flex:1; font-size:0.85rem;">
+                        <b>${u.name}</b><br>
+                        📞 ${u.phone}<br>
+                        🔑 Пароль: <span style="color:var(--primary)">${u.pass}</span><br>
+                        🎂 Рождение: ${u.bday || 'Не указано'}
+                    </div>
+                    <i class="fas fa-crown" onclick="toggleUserPremium('${id}')" style="color:${u.premium?'gold':'#ccc'}; cursor:pointer; font-size:1.5rem;"></i>
+                </div>`;
             }
             document.getElementById('admin-users-overlay').style.display = 'flex';
         });
@@ -1709,7 +1777,7 @@
         if(type === 'Как заказать?') reply = "Выберите товар, добавьте в корзину и нажмите 'Оформить'.";
         if(type === 'Оплата') reply = "Наличные, Алиф.";
         if(type === 'Где вы находитесь?') reply = "г. Душанбе, рынок Корвон.";
-        if(type === 'О премиуме') reply = "Premium дает: скидку -5%, бесплатную доставку, кредит ТОЛЬКО по паспорту!";
+        if(type === 'О премиуме') reply = "Premium дает: скидку -10%, бесплатную доставку, кредит ТОЛЬКО по паспорту и отправку сюрприз-подарков!";
         box.innerHTML += `<div class="msg msg-user">${type}</div>`;
         setTimeout(() => { box.innerHTML += `<div class="msg msg-bot">${reply}</div>`; box.scrollTop = box.scrollHeight; }, 500);
     }
@@ -1723,15 +1791,24 @@
         if(currentUser && /iPad|iPhone|iPod/.test(navigator.userAgent)) document.getElementById('pwa-install-banner').style.display = 'block';
     }
 
+    // --- ЛОГИКА ПРИВЛЕКАТЕЛЬНЫХ УВЕДОМЛЕНИЙ ---
     function sendProductNotification() {
         if (Notification.permission !== "granted") return;
         if (allProducts.length === 0) return;
         const randomProduct = allProducts[Math.floor(Math.random() * allProducts.length)];
+        const messages = [
+            `🔥 Хит продаж: ${randomProduct.name}!`,
+            `✨ Посмотрите на это: ${randomProduct.name} уже в наличии!`,
+            `🚀 Обновите свой ПК: ${randomProduct.name} ждет вас!`,
+            `🎁 Подарок для себя: ${randomProduct.name} в TajKomp!`
+        ];
+        const randomMsg = messages[Math.floor(Math.random() * messages.length)];
         navigator.serviceWorker.ready.then(registration => {
             registration.showNotification("TajKomp | Лучшие цены", {
-                body: `${randomProduct.name} уже в наличии! \nЦена: ${randomProduct.price} смн.`,
+                body: `${randomMsg} \nЦена: ${randomProduct.price} смн. Нажмите, чтобы купить!`,
                 icon: 'favicon.ico',
                 image: randomProduct.imgs ? randomProduct.imgs[0] : '',
+                badge: 'favicon.ico',
                 tag: 'product-ads',
                 data: { url: window.location.href }
             });
@@ -1741,20 +1818,75 @@
     setInterval(sendProductNotification, 3600000);
     setTimeout(sendProductNotification, 60000); 
 
+    updateAuthBtn();
+    render();
+</script>
+<div id="lockout-overlay" class="overlay" style="z-index: 12000;">
+    <div class="modal-content" style="text-align:center; border: 2px solid #ff4757;">
+        <div style="font-size:3.5rem; color:#ff4757; margin-bottom:15px;"><i class="fas fa-exclamation-triangle"></i></div>
+        <h2 style="color:var(--text); margin-bottom:10px;">Доступ ограничен</h2>
+        <p style="margin-bottom:25px; line-height:1.5; opacity:0.9;">Вы 3 раза ввели неправильный пароль. Пожалуйста, сбросьте пароль через поддержку или попробуйте снова.</p>
+        
+        <div style="display:flex; flex-direction:column; gap:12px;">
+            <button class="btn-buy" style="background:#0088cc;" onclick="resetPasswordViaTG()">
+                <i class="fab fa-telegram-plane"></i> Сбросить пароль
+            </button>
+            <button class="btn-buy" style="background:transparent; border:1px solid var(--primary); color:var(--primary);" onclick="retryPasswordEntry()">
+                Повторить попытку
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Инициализация счетчика
+    let failedAttempts = 0;
+
+    // Перехватываем оригинальную функцию attemptLogin
+    const originalAttemptLogin = window.attemptLogin;
+
+    window.attemptLogin = function() {
+        const passInput = document.getElementById('login-password-input');
+        const pass = passInput.value;
+        const phone = window.tempPhone;
+
+        db.ref('users/' + phone).once('value', snap => {
+            const user = snap.val();
+            
+            if (user.pass === pass) {
+                // Если пароль верный - сбрасываем счетчик и вызываем оригинал
+                failedAttempts = 0;
+                originalAttemptLogin();
+            } else {
+                // Если пароль неверный
+                failedAttempts++;
+                
+                if (failedAttempts >= 3) {
+                    // Закрываем окно ввода и показываем блокировку
+                    document.getElementById('login-pass-overlay').style.display = 'none';
+                    document.getElementById('lockout-overlay').style.display = 'flex';
+                    passInput.value = ""; // Очищаем поле
+                } else {
+                    alert("Неверный пароль! Осталось попыток: " + (3 - failedAttempts));
+                }
+            }
+        });
+    };
+
+    // Функция перехода в Телеграм
     function resetPasswordViaTG() {
         const userName = currentUser ? currentUser.name : (window.tempPhone || "Клиент");
         const userPhone = currentUser ? currentUser.phone : ("+" + window.tempPhone);
-        window.open(`https://t.me/IDIEVW?text=${encodeURIComponent(`Я забыл пароль\nИмя: ${userName}\nНомер: ${userPhone}`)}`, '_blank');
+        const message = encodeURIComponent(`Я забыл пароль\nИмя: ${userName}\nНомер: ${userPhone}`);
+        window.open(`https://t.me/IDIEVW?text=${message}`, '_blank');
     }
 
+    // Функция повтора (дает еще 3 попытки)
     function retryPasswordEntry() {
         failedAttempts = 0;
         document.getElementById('lockout-overlay').style.display = 'none';
         document.getElementById('login-pass-overlay').style.display = 'flex';
     }
-
-    updateAuthBtn();
-    render();
 </script>
 </body>
 </html>
