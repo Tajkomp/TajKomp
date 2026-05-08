@@ -611,7 +611,7 @@
         <h3 class="gold-text" style="font-size:1.2rem; margin: 10px 0;">29,99 TJS на 3 месяца</h3>
         <div style="text-align:left; margin: 20px 0; font-size: 0.9rem; line-height:1.6;">
             <p>🌟 <b>Кредит до 300с:</b> Только по паспорту!</p>
-            <p>🌟 <b>Скидки:</b> До -10% на все товары!</p>
+            <p>🌟 <b>Скидки:</b> До -5% на все товары!</p>
             <p>🌟 <b>Доставка:</b> Бесплатно по городу!</p>
             <p>🌟 <b>Подарки:</b> Отправка сюрприз подарков!</p>
         </div>
@@ -1444,7 +1444,7 @@
                     <button class="admin-btn-card" onclick="deleteP(${p.id}, event)" style="background:#e74c3c"><i class="fas fa-trash"></i></button>
                 </div>
                 ${p.oldPrice ? '<div class="promo-badge">АКЦИЯ</div>' : ''}
-                ${isPremium ? '<div class="premium-sticker">-10%</div>' : ''}
+                ${isPremium ? '<div class="premium-sticker">-5%</div>' : ''}
                 <div class="p-img-container"><img src="${imageSrc}" loading="lazy"></div>
                 <div class="p-info">
                     <h3>${p.name}</h3>
@@ -1777,7 +1777,7 @@
         if(type === 'Как заказать?') reply = "Выберите товар, добавьте в корзину и нажмите 'Оформить'.";
         if(type === 'Оплата') reply = "Наличные, Алиф.";
         if(type === 'Где вы находитесь?') reply = "г. Душанбе, рынок Корвон.";
-        if(type === 'О премиуме') reply = "Premium дает: скидку -10%, бесплатную доставку, кредит ТОЛЬКО по паспорту и отправку сюрприз-подарков!";
+        if(type === 'О премиуме') reply = "Premium дает: скидку -5%, бесплатную доставку, кредит ТОЛЬКО по паспорту и отправку сюрприз-подарков!";
         box.innerHTML += `<div class="msg msg-user">${type}</div>`;
         setTimeout(() => { box.innerHTML += `<div class="msg msg-bot">${reply}</div>`; box.scrollTop = box.scrollHeight; }, 500);
     }
